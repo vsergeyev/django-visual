@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+  	<h1>
+        <img src="/static/imgs/vdj.png" alt="VDj" style="width: 1em" />
+        Visual Django
+    </h1>
+    Select existing or create new Django project
+  </div>
+  <div class="card-body">
+  	<div class="row">
+		<div class="nav flex-column nav-pills col col-md-4" id="v-pills-tab" role="tablist" aria-orientation="vertical">
+		  <a class="nav-link {% if projects %}active{% endif %}" id="v-pills-home-tab" data-toggle="pill" href="#v-pills-home" role="tab" aria-controls="v-pills-home" aria-selected="true">
+		  	Open existing project</a>
+		  <a class="nav-link {% if not projects %}active{% endif %}" id="v-pills-new-tab" data-toggle="pill" href="#v-pills-new" role="tab" aria-controls="v-pills-new" aria-selected="false">
+		  	Create new project</a>
+		</div>
+
+		<div class="tab-content col col-md-8" id="v-pills-tabContent">
+		  <div class="tab-pane fade {% if projects %}show active{% endif %}" id="v-pills-home" role="tabpanel" aria-labelledby="v-pills-home-tab">
+		  	{% for item in projects %}
+		        <div class="card flex-row flex-wrap">
+			        <div class="card-header border-0">
+			            <img src="/static/imgs/vdj.png" alt="VDj" style="width: 2em" />
+			        </div>
+			        <div class="card-block px-2">
+			            <h4 class="card-title">{{item}}</h4>
+			            <p class="card-text"></p>
+			            <p>
+			            	<a href="#" class="btn btn-primary">Open</a>
+			            </p>
+			        </div>
+			    </div>
+			{% empty %}
+				<p>No projects</p>
+		    {% endfor %}
+		  </div>
+
+		  <div class="tab-pane fade {% if not projects %}show active{% endif %}" id="v-pills-new" role="tabpanel" aria-labelledby="v-pills-new-tab">
+		  	
+		  	{% for item in templates %}
+		        <div class="card flex-row flex-wrap">
+			        <div class="card-header border-0">
+			            <img src="/static/imgs/vdj.png" alt="VDj" style="width: 2em" />
+			        </div>
+			        <div class="card-block px-2">
+			            <h4 class="card-title">{{item}}</h4>
+			            <p class="card-text"></p>
+			            <p>
+			            	<a href="/ide/create_project/?template={{item}}" class="btn btn-primary">Create new</a>
+			            </p>
+			        </div>
+			    </div>
+			{% empty %}
+				<p>No projects</p>
+		    {% endfor %}
+
+		  </div>
+		</div>
+	</div>
+
+  </div>
+</div>
+{% endblock %}

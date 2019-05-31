@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="card">
+  <div class="card-header">
+  	<h1>
+        <img src="/static/imgs/vdj.png" alt="VDj" style="width: 1em" />
+        Visual Django
+    </h1>
+    Create new Django project
+  </div>
+  <div class="card-body">
+  	<div class="row">
+  		<div class="alert alert-info" role="alert">
+			Project name: please use only numbers, letters and underscores.
+			<ul>
+				<li>project will be created using <code>django-admin startproject</code>
+				<li>in <code>{{projects_home}}</code>
+			</ul>
+		</div>
+
+  		<form method="POST" action="/ide/create_project/">
+  			<div class="form-group">
+	    		{% csrf_token %}
+	    		<input type="hidden" name="template" value="{{template}}" />
+	    		
+	    		<label for="title">Project name</label>
+	    		<input type="text" name="title" value="{{title}}" />
+	    	</div>
+
+    		<button type="submit" class="btn btn-primary">Create project</button>
+		</form>
+	</div>
+
+  </div>
+</div>
+{% endblock %}
