@@ -29,7 +29,7 @@
 			            <h4 class="card-title">{{item}}</h4>
 			            <p class="card-text"></p>
 			            <p>
-			            	<a href="#" class="btn btn-primary">Open</a>
+			            	<a href="/ide/open_project/{{item}}/" class="btn btn-primary">Open</a>
 			            </p>
 			        </div>
 			    </div>
@@ -63,4 +63,11 @@
 
   </div>
 </div>
+
+<script>
+	$(function () {
+		if (location.hash == "#v-pills-new")
+	    	$('#v-pills-tab a[href="#v-pills-new"]').tab('show');
+	  })
+</script>
 {% endblock %}

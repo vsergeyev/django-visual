@@ -16,9 +16,17 @@
 
     <!-- Latest compiled JavaScript -->
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+
+    <link rel="stylesheet" href="/static/css/ide.css">
+
+    <link rel="shortcut icon" type="image/png" href="/static/imgs/vdj.png" />
+
+    {% block css %}
+    {% endblock %}
 </head>
 
 <body>
+{% block body %}
 <div class="page-header">
     {% block title %}{% endblock %}
 </div>
@@ -36,7 +44,7 @@
     </div>
   </div>
 </div>
-
+{% endblock %}
 </body>
 
 </html>

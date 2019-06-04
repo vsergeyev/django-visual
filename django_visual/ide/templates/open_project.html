@@ -1,0 +1,156 @@
+{% extends 'base.html' %}
+
+{% block css %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/split.js/1.3.5/split.min.js"></script>
+
+<style>
+    /* CSS Goes Here */
+    .split {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;overflow-y: auto;overflow-x: hidden;}
+    .gutter {background-color: transparent;background-repeat: no-repeat;background-position: 50%;}
+    .gutter.gutter-horizontal {cursor: col-resize;background-image:  url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg=='); }
+    .gutter.gutter-vertical {cursor: row-resize;background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII='); }
+    .split.split-horizontal, .gutter.gutter-horizontal { height: 100%;float: left;}
+    
+    #navigator_column {
+    	background:#ccc;
+    	padding-top: 50px;
+    }
+    
+    #center_column {
+    	background:#eee;
+    	padding-top: 50px;
+    }
+
+    #properties_column {
+    	background:#ccc;
+    	padding-top: 50px;
+    }
+</style>
+{% endblock %}
+
+{% block body %}
+<div class="row no-gutters full-height">
+	<nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+	    <a class="navbar-brand" href="#">
+	    	Project: {{project_id}}
+	    </a>
+	    
+	    <a class="btn btn-success btn-sm" href="#" target=_new>
+          Run
+        </a>
+
+	    <div class="collapse navbar-collapse" id="navbarCollapse">
+	      <ul class="navbar-nav mr-auto">
+	      	<li class="nav-item">
+		    	<a class="nav-link disabled" href="#">|</a>
+		  	</li>
+	        <li class="nav-item dropdown">
+			    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">File</a>
+			    <div class="dropdown-menu">
+			      <a class="dropdown-item" href="/">Open Project</a>
+			      <a class="dropdown-item" href="/#v-pills-new">Create Project</a>
+			      <div class="dropdown-divider"></div>
+			      <a class="dropdown-item" href="https://docs.djangoproject.com">Django Help</a>
+			      <div class="dropdown-divider"></div>
+			      <a class="dropdown-item" href="#">Exit</a>
+			    </div>
+			</li>
+	        
+	      </ul>
+
+	      <form class="form-inline mt-2 mt-md-0">
+	        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
+	        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
+	      </form>
+	    </div>
+	</nav>
+
+    <div id="navigator_column" class="col">
+    	<div class="card">
+	        <div class="card-header">
+	            <h4>Applications</h4>
+	        </div>
+	        <div class="card-block px-2">
+		    	<div class="list-group list-group-flush">
+		    	{% for item in project_apps %}
+				  <a href="#" class="list-group-item list-group-item-action">
+				    {{item}}
+				  </a>
+				{% endfor %}
+				</div>
+			</div>
+			<!-- <div class="card-footer">
+	            Edit
+	        </div> -->
+		</div>
+
+		<div class="card">
+	        <div class="card-header">
+	            <h4>Databases</h4>
+	        </div>
+	        <div class="card-block px-2">
+		    	<div class="list-group list-group-flush">
+		    	{% for label, item in project_databases.items %}
+				  <div href="#" class="list-group-item list-group-item-action">
+				    {{label}}
+
+					<div class="dropdown float-right">
+					  <button class="badge badge-info badge-pill btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+					    Info
+					  </button>
+					  <div class="dropdown-menu">
+					  	{% for key, value in item.iteritems %} 
+					    	<a class="dropdown-item small" href="#">{{key}}: {{value}}</a>
+					    {% endfor %}
+					  </div>
+					</div>
+				</div>
+				{% endfor %}
+				</div>
+			</div>
+			<!-- <div class="card-footer">
+	            Edit
+	        </div> -->
+		</div>
+
+		<div class="card">
+	        <div class="card-header">
+	        	<h4>URLs</h4>
+	        </div>
+	        <div class="card-block px-2">
+		    	<div class="list-group list-group-flush">
+		    	{% for item in project_urls %}
+				  <a href="#" class="list-group-item list-group-item-action">
+				    {{item.describe}}
+				  </a>
+				{% endfor %}
+				
+				<a href="#" class="list-group-item list-group-item-action">
+				  Add</a>
+				</div>
+			</div>
+			<!-- <div class="card-footer">
+	            Edit
+	        </div> -->
+		</div>
+		
+    </div>
+    <div id="center_column" class="col"></div>
+    <div id="properties_column" class="col">Properties</div>
+</div>
+
+<script>
+    /* JS Goes Here */
+    var splitobj = Split(["#navigator_column","#center_column","#properties_column"], {
+        elementStyle: function (dimension, size, gutterSize) { 
+            $(window).trigger('resize'); // Optional
+            return {'flex-basis': 'calc(' + size + '% - ' + gutterSize + 'px)'}
+        },
+        gutterStyle: function (dimension, gutterSize) { return {'flex-basis':  gutterSize + 'px'} },
+        sizes: [20,60,20],
+        minSize: 50,
+        gutterSize: 6,
+        cursor: 'col-resize'
+    });
+</script>
+{% endblock %}
