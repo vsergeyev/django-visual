@@ -14,12 +14,12 @@ Plan is to have these visual tools:
    * 1-page application
    
  * Project Inspector
-   * Django Project proerties (settings)
+   * Django Project properties (settings)
    * Applications CRUD
    
  * Model(s) Designer
    * App -> Model(s) CRUD
-   * Model proeprties/fields (human UX)
+   * Model properties/fields (human UX)
    
  * View<->Template Visual Editor
    * like TForm in Delphi

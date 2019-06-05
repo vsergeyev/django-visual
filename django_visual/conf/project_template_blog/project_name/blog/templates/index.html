@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% block content %}
+	<!-- BLOG POSTS GOES HERE -->
+	{% for post in posts %}
+		<div class="card">
+			<div class="card-header">
+			  	<h2>{{post.title}}</h2>
+			</div>
+			<div class="card-body">
+				{{post.text}}
+			</div>
+		</div>
+		<br />
+	{% empty %}
+		<div class="card">
+			<div class="card-header">
+			  	<h2>Ups... no posts found</h2>
+			</div>
+			<div class="card-body">
+				<a href="/admin/">Open Admin panel</a> and post something to this blog. Username: admin/superuser
+			</div>
+		</div>
+	{% endfor %}
+{% endblock %}
