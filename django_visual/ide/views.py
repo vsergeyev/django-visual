@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
-from __future__ import unicode_literals
 
 import os
-import sys
 import random
-# Python 2
-import imp
 
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
-
+from django.core.management.base import CommandError
 from django.conf import settings, Settings
+
+from create_project import copy_project_template
+from open_project import project_context
+
 
 PROJECTS_TEMPLATES = [
 		"Blog", # Blog project is set of main page <br />with posts flow and blog entry detail page.
@@ -47,14 +47,24 @@ def create_project(request):
 	projects_home = settings.PROJECTS_HOME
 
 	context = {
-		"template": request.GET.get("template", ""),
+		"template": request.GET.get("template", "blog"),
 		"title": random.choice(PROJECT_NAMES) + "_" + random.choice(PROJECT_NAMES),
-		"projects_home": projects_home
+		"projects_home": projects_home,
+		'error': ''
 	}
 
 	if request.method == "POST":
 		template = request.POST.get("template")
-		return HttpResponse(template)
+		title = request.POST.get("title")
+
+		try:
+			copy_project_template(template, title)
+		except CommandError, e:
+			context['title'] = title
+			context['error'] = str(e)
+			return render(request, 'create_project.html', context)
+
+		return redirect('open_project', project_id=title)
 	
 	return render(request, 'create_project.html', context)
 
@@ -64,30 +74,23 @@ def open_project(request, project_id):
 	"""
 	project_home = os.path.join(settings.PROJECTS_HOME, project_id)
 
-	# https://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path
-	project_settings = imp.load_source('{}_settings'.join(project_id), os.path.join(
-		project_home,
-		project_id,
-		"settings.py"
-	))
+	context = project_context(project_id, project_home)
 
-	old_path = sys.path
-	sys.path.append(project_home)
-	
-	project_urls = imp.load_source('{}_urls'.join(project_id), os.path.join(
-		project_home,
-		project_id,
-		"urls.py"
-	))
-
-	sys.path = old_path
-
-	context = {
-		"project_id": project_id,
-		"project_home": project_home,
-		"project_apps": project_settings.INSTALLED_APPS,
-		"project_databases": project_settings.DATABASES,
-		"project_urls": project_urls.urlpatterns
-	}
+	context["project_id"] = project_id
 
 	return render(request, 'open_project.html', context)
+
+def open_file(request):
+	"""
+	Retrieves file content into IDE to edit.
+	"""
+
+	path = request.GET.get("path", "")
+
+	if not path:
+		return HttpResponse("")
+
+	with open(path, 'r') as f:
+		content = f.read()
+
+	return HttpResponse(content)

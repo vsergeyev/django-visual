@@ -11,24 +11,25 @@
   </div>
   <div class="card-body">
   	<div class="row">
-  		<div class="alert alert-info" role="alert">
-			Project name: please use only numbers, letters and underscores.
-			<ul>
-				<li>project will be created using <code>django-admin startproject</code>
-				<li>in <code>{{projects_home}}</code>
-			</ul>
-		</div>
+  		{% if error %}
+  			<div class="alert alert-danger" role="alert">
+				{{error}}
+			</div>
+		{% endif %}
 
   		<form method="POST" action="/ide/create_project/">
+  			{% csrf_token %}
+  			<input type="hidden" name="template" value="{{template}}" />
   			<div class="form-group">
-	    		{% csrf_token %}
-	    		<input type="hidden" name="template" value="{{template}}" />
-	    		
 	    		<label for="title">Project name</label>
-	    		<input type="text" name="title" value="{{title}}" />
+	    		<input type="text" name="title" value="{{title}}" required class="form-control"  />
+	    		<small>
+					Project name: please use only numbers, letters and underscores. Project will be created in <code>{{projects_home}}</code>
+				</small>
 	    	</div>
 
     		<button type="submit" class="btn btn-primary">Create project</button>
+    		<a href="/" class="btn btn-light">Cancel</a>
 		</form>
 	</div>
 

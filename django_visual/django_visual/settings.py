@@ -126,3 +126,4 @@ STATICFILES_DIRS = [
 ]
 
 PROJECTS_HOME = os.path.join(BASE_DIR, 'projects')
+TEMPLATES_HOME = os.path.join(BASE_DIR, 'conf')
