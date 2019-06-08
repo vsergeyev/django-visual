@@ -12,7 +12,10 @@ def copy_project_template(template_name, project_name):
 	Copies template of new projexct
 	"""
 	projects_home = settings.PROJECTS_HOME
-	project_tpl = os.path.join(settings.TEMPLATES_HOME, 'project_template_blog')
+	project_tpl = os.path.join(
+		settings.TEMPLATES_HOME,
+		'project_template_{}'.format(template_name)
+	)
 
 	options = {
 		'verbosity': 0,

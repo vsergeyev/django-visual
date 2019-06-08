@@ -13,13 +13,15 @@ from open_project import project_context
 
 
 PROJECTS_TEMPLATES = [
-		"Blog", # Blog project is set of main page <br />with posts flow and blog entry detail page.
-		"Content Web Site", # Content web site is a collection of entries, <br />main page and detail page for every item.
-		"1-Page Application" # One page web application.
+		("blog", "Blog"), # Blog project is set of main page <br />with posts flow and blog entry detail page.
+		("cms", "Content Web Site"), # Content web site is a collection of entries, <br />main page and detail page for every item.
+		("app", "1-Page Application") # One page web application.
 	]
 
-PROJECT_NAMES = ['crazy', 'frog', 'squirrel', 'nut', 'bold',
-'hamster', 'blog', 'site', 'red', 'dead', 'last', 'first', 'super']
+PROJECT_NAMES = ['shiny', 'crazy', 'frog', 'squirrel', 'nut', 'bold',
+	'hamster', 'blog', 'site', 'red', 'dead', 'last', 'first', 'super', 'cool',
+	'brilliant', 'py', 'web', 'app', 'hello'
+]
 
 
 def index(request):
@@ -31,13 +33,12 @@ def index(request):
 	projects_home = settings.PROJECTS_HOME
 	projects = os.listdir(projects_home)
 
-	templates = PROJECTS_TEMPLATES
-
 	context = {
 		"projects": projects,
-		"templates": templates
+		"templates": PROJECTS_TEMPLATES
 	}
 	return render(request, 'index.html', context)
+
 
 def create_project(request):
 	"""
@@ -68,6 +69,7 @@ def create_project(request):
 	
 	return render(request, 'create_project.html', context)
 
+
 def open_project(request, project_id):
 	"""
 	Load project structure into IDE.
@@ -79,6 +81,7 @@ def open_project(request, project_id):
 	context["project_id"] = project_id
 
 	return render(request, 'open_project.html', context)
+
 
 def open_file(request):
 	"""

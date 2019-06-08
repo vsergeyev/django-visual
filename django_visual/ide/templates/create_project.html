@@ -1,38 +1,27 @@
-{% extends 'base.html' %}
+{% extends 'index.html' %}
 
-{% block content %}
-<div class="card">
-  <div class="card-header">
-  	<h1>
-        <img src="/static/imgs/vdj.png" alt="VDj" style="width: 1em" />
-        Visual Django
-    </h1>
-    Create new Django project
-  </div>
-  <div class="card-body">
-  	<div class="row">
-  		{% if error %}
-  			<div class="alert alert-danger" role="alert">
-				{{error}}
-			</div>
-		{% endif %}
+{% block body_inner_title %}Create new project{% endblock %}
 
-  		<form method="POST" action="/ide/create_project/">
-  			{% csrf_token %}
-  			<input type="hidden" name="template" value="{{template}}" />
-  			<div class="form-group">
-	    		<label for="title">Project name</label>
-	    		<input type="text" name="title" value="{{title}}" required class="form-control"  />
-	    		<small>
-					Project name: please use only numbers, letters and underscores. Project will be created in <code>{{projects_home}}</code>
-				</small>
-	    	</div>
+{% block body_inner %}
+  {% if error %}
+			<div class="alert alert-danger" role="alert">
+			{{error}}
+		</div>
+	{% endif %}
 
-    		<button type="submit" class="btn btn-primary">Create project</button>
-    		<a href="/" class="btn btn-light">Cancel</a>
-		</form>
-	</div>
+	<form method="POST" action="/ide/create_project/" class="p-3">
+		{% csrf_token %}
+		<input type="hidden" name="template" value="{{template}}" />
+		<div class="form-group">
+  		<label for="title">Project name</label>
+  		<input type="text" name="title" value="{{title}}" required class="form-control"  />
+  		<ul class="small">
+        <li>Project name: please use only numbers, letters and underscores.</li>
+        <li>Project will be created in <code>{{projects_home}}</code></li>
+      </ul>
+  	</div>
 
-  </div>
-</div>
+		<button type="submit" class="btn btn-primary">Create project</button>
+		<a href="/" class="btn btn-light">Cancel</a>
+  </form>
 {% endblock %}

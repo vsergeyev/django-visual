@@ -3,13 +3,13 @@ html, body {
 }
 
 .full-height {
-  height: 100%;
+  height: calc(100vh - 48px); /* Full height minus navbar */
 }
 
 .code-editor {
 	position: absolute;
     width: 100%;
-    height: 100%;
+    height: calc(100vh - 48px - 50px); /* Full height minus navbar and tab */
 }
 
 .table.table-ellipsis tbody td {
@@ -18,3 +18,25 @@ html, body {
     text-overflow: ellipsis;
     white-space: nowrap
 }
+
+.split {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;overflow-y: auto;overflow-x: hidden;}
+.gutter {background-color: transparent;background-repeat: no-repeat;background-position: 50%;}
+.gutter.gutter-horizontal {cursor: col-resize;background-image:  url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAUAAAAeCAYAAADkftS9AAAAIklEQVQoU2M4c+bMfxAGAgYYmwGrIIiDjrELjpo5aiZeMwF+yNnOs5KSvgAAAABJRU5ErkJggg=='); }
+.gutter.gutter-vertical {cursor: row-resize;background-image: url('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAB4AAAAFAQMAAABo7865AAAABlBMVEVHcEzMzMzyAv2sAAAAAXRSTlMAQObYZgAAABBJREFUeF5jOAMEEAIEEFwAn3kMwcB6I2AAAAAASUVORK5CYII='); }
+.split.split-horizontal, .gutter.gutter-horizontal { height: 100%;float: left;}
+
+#navigator_column {
+	padding-top: 55px;
+}
+
+#center_column {
+	padding-top: 55px;
+}
+
+#properties_column {
+	padding-top: 55px;
+}
+
+li.jstree-open > a .jstree-icon {background:url("/static/imgs/folder.png") 0px 0px no-repeat !important;}
+li.jstree-closed > a .jstree-icon {background:url("/static/imgs/folder.png") 0px 0px no-repeat !important;}
+li.jstree-leaf > a .jstree-icon {background:url("/static/imgs/file.png") 0px 0px no-repeat !important;}

@@ -31,7 +31,7 @@ Plan is to have these visual tools:
  * Database Viewer
  
 
-##Hints
+## Hints
 
  * Explore project files in Project Navigator
  * Look on project's Applications
