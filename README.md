@@ -4,31 +4,40 @@ Inspired by Borland Delphi.
 
 Visual tools for working with Django projects (https://www.djangoproject.com)
 
-## Tools
+## IDE
 
 Plan is to have these visual tools:
 
  * New Project Templates
    * Blog
-   * Content Web Project (Index, List View, Detail View)
-   * 1-page application
+   * Content Web Site
+   * 1-Page Application
    
- * Project Inspector
+ * Project Navigator
    * Django Project properties (settings)
-   * Applications CRUD
+   * Applications editor
+   * URLs designer
    
- * Model(s) Designer
-   * App -> Model(s) CRUD
-   * Model properties/fields (human UX)
+ * Models Designer
+   * App -> Models CRUD
+   * Human UI for Model fields
    
- * View<->Template Visual Editor
+ * View -> Template Visual Editor
    * like TForm in Delphi
-   * query(ies) editor for view
-   * out variables (what View returns)
+   * Queries editor for view
+   * Output variables (what View returns)
    * Template visual editor (inputs, sections - header, detail, list, footer)
    
- * URLs Designer
+ * Database Viewer
  
+
+##Hints
+
+ * Explore project files in Project Navigator
+ * Look on project's Applications
+ * Database by default is SQLITE3
+ * Run project with green button
+
  ## Have a question?
  
  Email me: vova.sergeyev@gmail.com

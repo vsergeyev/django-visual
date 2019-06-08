@@ -141,9 +141,9 @@
 		    <a href="#welcome-editor" class="nav-link active" id="welcome-tab" data-toggle="tab" role="tab" aria-controls="welcome-editor" aria-selected="true">Welcome</a>
 		  </li>
 		</ul>
-		<div class="tab-content h-100" id="center_column_tabs_content">
+		<div class="tab-content h-100 border-left" id="center_column_tabs_content">
 		  <div class="tab-pane fade show active h-100" id="welcome-editor" role="tabpanel" aria-labelledby="welcome-tab">
-		  	<iframe style="height: 100%; width: 100%" src="https://vsergeyev.github.io/django-visual/"></iframe>
+		  	<iframe style="height: 100%; width: 100%; border: 0" src="https://vsergeyev.github.io/django-visual/"></iframe>
 		  </div>
 		</div>
     </div>
@@ -186,7 +186,7 @@
 					  <button class="badge badge-info badge-pill btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					    Info
 					  </button>
-					  <div class="dropdown-menu">
+					  <div class="dropdown-menu dropdown-menu-right">
 					  	{% for key, value in item.iteritems %} 
 					    	<a class="dropdown-item small" href="#">{{key}}: {{value}}</a>
 					    {% endfor %}
