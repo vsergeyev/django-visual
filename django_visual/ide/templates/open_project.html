@@ -10,6 +10,11 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.4/theme-monokai.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.4/mode-python.js"></script>
 
+<script src="/static/js/sql.js"></script>
+
+<script src="/static/js/editor_code.js"></script>
+<script src="/static/js/editor_sqlite3.js"></script>
+
 <style>
     /* CSS Goes Here */
     .split {-webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;overflow-y: auto;overflow-x: hidden;}
@@ -28,7 +33,6 @@
     }
     
     #center_column {
-    	background:#eee;
     	padding-top: 55px;
     }
 
@@ -136,16 +140,10 @@
 		  <li class="nav-item">
 		    <a href="#welcome-editor" class="nav-link active" id="welcome-tab" data-toggle="tab" role="tab" aria-controls="welcome-editor" aria-selected="true">Welcome</a>
 		  </li>
-		  <li class="nav-item">
-		    <a href="#aaa-editor" class="nav-link" id="aaa-tab" data-toggle="tab" role="tab" aria-controls="aaa-editor" aria-selected="true">AAA</a>
-		  </li>
 		</ul>
 		<div class="tab-content h-100" id="center_column_tabs_content">
 		  <div class="tab-pane fade show active h-100" id="welcome-editor" role="tabpanel" aria-labelledby="welcome-tab">
 		  	<iframe style="height: 100%; width: 100%" src="https://vsergeyev.github.io/django-visual/"></iframe>
-		  </div>
-		  <div class="tab-pane fade h-100" id="aaa-editor" role="tabpanel" aria-labelledby="aaa-tab">
-		  	Bha ba ba!!!
 		  </div>
 		</div>
     </div>
@@ -249,36 +247,34 @@
     	$(this).jstree('open_all');
 
     	$(this).on("changed.jstree", function (e, data) {
-			var label = $("#" + data.selected[0]).text(),
-				path = $("#" + data.selected[0]).attr("data-path");
+			var label = $("#" + data.selected[0]).text().trim(),
+				path = $("#" + data.selected[0]).attr("data-path").trim();
 
 			//console.log(label);
 
-			$.get("/ide/open_file/", {"path": path}, function(data) {
-				//console.log(data);
+			var ts = + new Date();
 
-				var ts = + new Date();
+			$('<li class="nav-item">'
+	    	  + '<a href="#editor-' + ts + '" class="nav-link" id="tab-' + ts + '" data-toggle="tab" role="tab" '
+	    	  + 'aria-controls="editor-' + ts + '">' + label + '</a>'
+	  		  + '</li>').appendTo("#center_column_tabs");
 
-				$('<li class="nav-item">'
-		    	  + '<a href="#editor-' + ts + '" class="nav-link" id="tab-' + ts + '" data-toggle="tab" role="tab" '
-		    	  + 'aria-controls="editor-' + ts + '">' + label + '</a>'
-		  		  + '</li>').appendTo("#center_column_tabs");
+			$('<div class="tab-pane fade h-100" id="editor-' + ts + '" role="tabpanel" '
+			  + 'aria-labelledby="tab-' + ts + '">'
+			  + '<div class="code-editor" id="code-editor-' + ts + '"></div>'
+			  + '</div>').appendTo('#center_column_tabs_content');
 
-				$('<div class="tab-pane fade h-100" id="editor-' + ts + '" role="tabpanel" '
-				  + 'aria-labelledby="tab-' + ts + '">'
-				  + '<div class="code-editor" id="code-editor-' + ts + '">' + data + '</div>'
-				  + '</div>').appendTo('#center_column_tabs_content');
+			$('#tab-' + ts).tab('show');
 
-				$('#tab-' + ts).tab('show');
+			if (label.endsWith(".sqlite3")) {
+				load_db(path, 'code-editor-' + ts);
 
-				var PythonMode = ace.require("ace/mode/python").Mode;
-				var editor = ace.edit('code-editor-' + ts);
+			} else if (label.endsWith("models.py")) {
+				load_file(path, 'code-editor-' + ts);
 
-				editor.setTheme("ace/theme/monokai");
-				editor.session.setMode(new PythonMode());
-				editor.setFontSize(14);
-				//$('#tab-' + ts + ' li:last-child a').tab('show');
-			});
+			} else {
+				load_file(path, 'code-editor-' + ts);
+			};
 		});
     });
 </script>

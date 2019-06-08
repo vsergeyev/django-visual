@@ -1,4 +1,4 @@
-# Django Visual
+# Visual Django
 
 Inspired by Borland Delphi.
 

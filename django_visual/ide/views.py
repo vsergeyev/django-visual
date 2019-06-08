@@ -93,4 +93,4 @@ def open_file(request):
 	with open(path, 'r') as f:
 		content = f.read()
 
-	return HttpResponse(content)
+	return HttpResponse(content, content_type='application/octet-stream')
