@@ -42,12 +42,28 @@
 	        <li class="nav-item dropdown">
 			    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">File</a>
 			    <div class="dropdown-menu">
+			      <a class="dropdown-item" href="#">New File</a>
+			      <a class="dropdown-item" href="#">Save</a>
+			      <a class="dropdown-item" href="#">Save All</a>
+			      <div class="dropdown-divider"></div>
+			      <a class="dropdown-item" href="#">Close File</a>
+			      <a class="dropdown-item" href="#">Close All Files</a>
+			      <div class="dropdown-divider"></div>
 			      <a class="dropdown-item" href="/">Open Project</a>
 			      <a class="dropdown-item" href="/#v-pills-new">Create Project</a>
 			      <div class="dropdown-divider"></div>
 			      <a class="dropdown-item" href="https://docs.djangoproject.com">Django Help</a>
+			    </div>
+			</li>
+
+			<li class="nav-item dropdown">
+			    <a class="nav-link dropdown-toggle" data-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Edit</a>
+			    <div class="dropdown-menu">
+			      <a class="dropdown-item" href="#">Undo</a>
 			      <div class="dropdown-divider"></div>
-			      <a class="dropdown-item" href="#">Exit</a>
+			      <a class="dropdown-item" href="#">Cut</a>
+			      <a class="dropdown-item" href="#">Copy</a>
+			      <a class="dropdown-item" href="#">Paste</a>
 			    </div>
 			</li>
 	        
@@ -119,6 +135,29 @@
 		  <div class="tab-pane fade show active h-100" id="welcome-editor" role="tabpanel" aria-labelledby="welcome-tab">
 		  	<iframe style="height: 100%; width: 100%; border: 0" src="https://vsergeyev.github.io/django-visual/"></iframe>
 		  </div>
+
+		  {% for item, models in project_apps.iteritems %}
+		  <div class="tab-pane fade h-100 p-3" id="model-editor-{{item}}" role="tabpanel">
+		  	{% for model in models %}
+			<div class="card">
+				<ul class="nav nav-tabs">
+				  <li class="nav-item">
+				    <a class="nav-link active bg-light" role="tab">Model: {{model.0}}</a>
+				  </li>
+				</ul>
+		        <div class="card-block px-2">
+			    	<div class="list-group list-group-flush">
+			    	{% for field in model.1 %}
+					  <div href="#" class="list-group-item list-group-item-action">
+					    {{field.name}} <span class="badge badge-info badge-pill float-right">{{field.class}}</span>
+					</div>
+					{% endfor %}
+					</div>
+				</div>
+			</div>
+			{% endfor %}
+		  </div>
+		  {% endfor %}
 		</div>
     </div>
 
@@ -132,11 +171,49 @@
 			</ul>
 	        <div class="card-block px-2">
 		    	<div class="list-group list-group-flush">
-		    	{% for item in project_apps %}
-				  <a href="#" class="list-group-item list-group-item-action">
-				    {{item}}
-				  </a>
+		    		<div class="list-group-item">
+				    	django built-in
+
+				    	<div class="dropdown float-right">
+						  <button class="badge badge-info badge-pill btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						    Info
+						  </button>
+						  <div class="dropdown-menu dropdown-menu-right">
+						  	{% for item, models in project_apps.iteritems %}
+		    					{% if 'django.contrib' in item %}
+						    		<a class="dropdown-item small" href="#">{{item}}</a>
+								{% endif %}
+				    		{% endfor %}
+						  </div>
+						</div>
+					</div>
+
+		    	{% for item, models in project_apps.iteritems %}
+		    		{% if 'django.contrib' in item %}
+
+		    		{% else %}
+					  <div class="list-group-item list-group-item-action">
+					  	<a href="#" data-panel="model-editor-{{item}}" class="list-group-item-action open-model-editor">{{item}}</a>
+
+					  	{% if models %}
+					  	<div class="dropdown float-right">
+					  	  <button class="badge badge-info badge-pill btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+						    Models
+						  </button>
+						  <div class="dropdown-menu dropdown-menu-right">
+				  			{% for model in models %}
+				    			<a class="dropdown-item small" href="#">{{model.0}}</a>
+				  			{% endfor %}
+						  </div>
+						</div>
+						{% endif %}
+					  </div>
+					 {% endif %}
 				{% endfor %}
+
+				<span class="list-group-item">
+					<a href="#" class="badge badge-info badge-pill float-right">Edit</a>
+				</span>
 				</div>
 			</div>
 			<!-- <div class="card-footer">
@@ -147,13 +224,13 @@
 		<div class="card">
 	        <ul class="nav nav-tabs">
 			  <li class="nav-item">
-			    <a class="nav-link active bg-light" role="tab">Databases</a>
+			    <span class="nav-link active bg-light" role="tab">Databases</span>
 			  </li>
 			</ul>
 	        <div class="card-block px-2">
 		    	<div class="list-group list-group-flush">
 		    	{% for label, item in project_databases.items %}
-				  <div href="#" class="list-group-item list-group-item-action">
+				  <div class="list-group-item">
 				    {{label}}
 
 					<div class="dropdown float-right">
@@ -168,6 +245,10 @@
 					</div>
 				</div>
 				{% endfor %}
+
+				<span class="list-group-item">
+					<a href="#" class="badge badge-info badge-pill float-right">Edit</a>
+				</span>
 				</div>
 			</div>
 			<!-- <div class="card-footer">
@@ -178,19 +259,20 @@
 		<div class="card">
 	        <ul class="nav nav-tabs">
 			  <li class="nav-item">
-			    <a class="nav-link active bg-light" role="tab">URLs</a>
+			    <span class="nav-link active bg-light" role="tab">URLs</span>
 			  </li>
 			</ul>
 	        <div class="card-block px-2">
 		    	<div class="list-group list-group-flush">
 		    	{% for item in project_urls %}
-				  <a href="#" class="list-group-item list-group-item-action">
+				  <span class="list-group-item">
 				    {{item}}
-				  </a>
+				  </span>
 				{% endfor %}
-				
-				<a href="#" class="list-group-item list-group-item-action">
-				  Add</a>
+
+				<span class="list-group-item">
+					<a href="#" class="badge badge-info badge-pill float-right">Edit</a>
+				</span>
 				</div>
 			</div>
 			<!-- <div class="card-footer">
@@ -224,13 +306,20 @@
 			var label = $("#" + data.selected[0]).text().trim(),
 				path = $("#" + data.selected[0]).attr("data-path").trim();
 
-			//console.log(label);
+			console.log(label);
+			console.log(path);
+
+			if ($("a.nav-link").find("[data-path='" + path + "']").length) {
+				console.log("FOUND");
+				$("a.nav-link").find("[data-path='" + path + "']").tab("show");
+				return
+			}
 
 			var ts = + new Date();
 
 			$('<li class="nav-item">'
 	    	  + '<a href="#editor-' + ts + '" class="nav-link" id="tab-' + ts + '" data-toggle="tab" role="tab" '
-	    	  + 'aria-controls="editor-' + ts + '">' + label + '</a>'
+	    	  + 'aria-controls="editor-' + ts + '" data-path="' + path + '">' + label + '</a>'
 	  		  + '</li>').appendTo("#center_column_tabs");
 
 			$('<div class="tab-pane fade h-100" id="editor-' + ts + '" role="tabpanel" '
@@ -249,6 +338,20 @@
 			} else {
 				load_file(path, 'code-editor-' + ts);
 			};
+		});
+
+		$(".open-model-editor").on("click", function() {
+			var panel = $(this).data("panel");
+			var label = $(this).text();
+
+			if ($('#tab-' + panel).length == 0) {
+				$('<li class="nav-item">'
+		    	  + '<a href="#' + panel + '" class="nav-link" id="tab-' + panel + '" data-toggle="tab" role="tab" '
+		    	  + 'aria-controls="' + panel + '">Application: ' + label + '</a>'
+		  		  + '</li>').appendTo("#center_column_tabs");
+			}
+
+			$('#tab-' + panel).tab('show');
 		});
     });
 </script>

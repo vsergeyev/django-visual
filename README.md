@@ -38,10 +38,10 @@ Plan is to have these visual tools:
  * Database by default is SQLITE3
  * Run project with green button
 
- ## Have a question?
+## Have a question?
  
  Email me: vova.sergeyev@gmail.com
  
  Create issue on Github
  
- ## Thank you!
+## Thank you!

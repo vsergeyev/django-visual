@@ -14,14 +14,12 @@
 
 	    <div class="collapse navbar-collapse" id="navbarCollapse">
 	      <ul class="navbar-nav mr-auto">
-	      	
-	        
 	      </ul>
 
-	      <form class="form-inline mt-2 mt-md-0">
+	      <!-- <form class="form-inline mt-2 mt-md-0">
 	        <input class="form-control mr-sm-2" type="text" placeholder="Search" aria-label="Search">
 	        <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
-	      </form>
+	      </form> -->
 	    </div>
 	</nav>
 
@@ -35,14 +33,12 @@
 	        <div class="card-block px-2">
 		    	<div id="project_tree" class="p-2 border-left">
 		    		<p>
-		    			Django Project structure will be displayed here once you choose a project to open.
-		    		</p>
+				    	The fundamental unit of a Django web application is a <a href="https://djangobook.com/mdj2-django-structure/" target=_blank>Django project</a>. A Django project is made up one or more Django applications. For example a blog, a users contacts app or an event calendar. 
+				    </p>
 		    		<p>
 				    	<img src="/static/imgs/project_structure.png" class="img-fluid" alt="Django Project structure" />
 				    </p>
-				    <p>
-				    	The fundamental unit of a Django web application is a <a href="https://djangobook.com/mdj2-django-structure/" target=_blank>Django project</a>. A Django project is made up one or more Django applications. For example a blog, a users contacts app or an event calendar. 
-				    </p>
+				    
 				</div>
 			</div>
 		</div>
@@ -75,12 +71,8 @@
 					        <div class="card-header border-0">
 					            <img src="/static/imgs/vdj.png" alt="VDj" style="width: 2em" />
 					        </div>
-					        <div class="card-block px-2">
-					            <h4 class="card-title">{{item}}</h4>
-					            <p class="card-text"></p>
-					            <p>
-					            	<a href="/ide/open_project/{{item}}/" class="btn btn-primary">Open</a>
-					            </p>
+					        <div class="card-block p-2">
+					            <a href="/ide/open_project/{{item}}/" class="btn btn-light">Open "{{item}}"</a>
 					        </div>
 					    </div>
 					{% empty %}
@@ -95,12 +87,10 @@
 					        <div class="card-header border-0">
 					            <img src="/static/imgs/vdj.png" alt="VDj" style="width: 2em" />
 					        </div>
-					        <div class="card-block px-2">
+					        <div class="card-block p-2">
 					            <h4 class="card-title">{{item.1}}</h4>
-					            <p class="card-text"></p>
-					            <p>
-					            	<a href="/ide/create_project/?template={{item.0}}" class="btn btn-primary">Create new</a>
-					            </p>
+					            <p class="card-text">{{item.2|safe}}</p>
+					            <a href="/ide/create_project/?template={{item.0}}" class="btn btn-light">Create</a>
 					        </div>
 					    </div>
 					{% empty %}

@@ -12,22 +12,10 @@ from create_project import copy_project_template
 from open_project import project_context
 
 
-PROJECTS_TEMPLATES = [
-		("blog", "Blog"), # Blog project is set of main page <br />with posts flow and blog entry detail page.
-		("cms", "Content Web Site"), # Content web site is a collection of entries, <br />main page and detail page for every item.
-		("app", "1-Page Application") # One page web application.
-	]
-
-PROJECT_NAMES = ['shiny', 'crazy', 'frog', 'squirrel', 'nut', 'bold',
-	'hamster', 'blog', 'site', 'red', 'dead', 'last', 'first', 'super', 'cool',
-	'brilliant', 'py', 'web', 'app', 'hello'
-]
-
-
 def index(request):
 	"""
 	IDE welcome
-	Select or Create Project
+	Open or Create Project
 	"""
 	
 	projects_home = settings.PROJECTS_HOME
@@ -35,7 +23,7 @@ def index(request):
 
 	context = {
 		"projects": projects,
-		"templates": PROJECTS_TEMPLATES
+		"templates": settings.PROJECTS_TEMPLATES
 	}
 	return render(request, 'index.html', context)
 
@@ -45,11 +33,12 @@ def create_project(request):
 	Create new Django project
 	"""
 
+	names = settings.PROJECT_NAMES
 	projects_home = settings.PROJECTS_HOME
 
 	context = {
 		"template": request.GET.get("template", "blog"),
-		"title": random.choice(PROJECT_NAMES) + "_" + random.choice(PROJECT_NAMES),
+		"title": random.choice(names) + "_" + random.choice(names),
 		"projects_home": projects_home,
 		'error': ''
 	}
