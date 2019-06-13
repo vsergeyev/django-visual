@@ -40,3 +40,15 @@ html, body {
 li.jstree-open > a .jstree-icon {background:url("/static/imgs/folder.png") 0px 0px no-repeat !important;}
 li.jstree-closed > a .jstree-icon {background:url("/static/imgs/folder.png") 0px 0px no-repeat !important;}
 li.jstree-leaf > a .jstree-icon {background:url("/static/imgs/file.png") 0px 0px no-repeat !important;}
+
+.glyphicon {
+  position: relative;
+  top: 1px;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+}
+
+.glyphicon-close {
+  background: url("/static/imgs/close10.png") 0px 0px no-repeat !important;;
+}

@@ -3,6 +3,7 @@
 import os
 import glob
 import sys
+import inspect
 import imp
 from importlib import import_module
 import collections
@@ -50,7 +51,15 @@ def project_context(project_id, project_home):
 				fields.append({"name": field.name, "class": field.get_internal_type()})
 
 			if app in project_apps:
-				project_apps[app].append((model.__name__, fields))
+				model_path = inspect.getsourcefile(model)
+				model_rel_path = model_path.replace(project_home, "")
+
+				project_apps[app].append({
+					"name": model.__name__,
+					"path": model_path,
+					"rel_path": model_rel_path,
+					"fields": fields,
+				})
 
 	# print all_models
 	# print project_apps

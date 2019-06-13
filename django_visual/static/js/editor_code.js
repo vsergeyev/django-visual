@@ -2,16 +2,26 @@
 
 function load_file(path, el) {
 	var content = "";
+	var tid = el;
 
 	$.get("/ide/open_file/", {"path": path}, function(data) {
 		//console.log(data);
-		$("#" + el).text(data);
+		$("#code-editor-" + el).text(data);
 		
 		var PythonMode = ace.require("ace/mode/python").Mode;
-		var editor = ace.edit(el);
+		var editor = ace.edit("code-editor-" + el);
 
 		editor.setTheme("ace/theme/monokai");
 		editor.session.setMode(new PythonMode());
 		editor.setFontSize(14);
+
+		editor.getSession().on("change", function () {
+		    // textarea.val(editor.getSession().getValue());
+		    var label = $("#tab-" + tid + " span").text();
+		    if (!label.endsWith(" *")) {
+		    	$("#tab-" + tid + " span").text(label + " *");
+		    }
+
+		});
 	});
 }

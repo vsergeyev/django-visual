@@ -9,7 +9,8 @@ Visual tools for working with Django projects (https://www.djangoproject.com)
 Plan is to have these visual tools:
 
  * New Project Templates
-   * Blog
+   * Empty project
+   * Blog project
    * Content Web Site
    * 1-Page Application
    
@@ -19,8 +20,8 @@ Plan is to have these visual tools:
    * URLs designer
    
  * Models Designer
-   * App -> Models CRUD
-   * Human UI for Model fields
+   * App -> Models View & Edit
+   * Human UI for Model fields with help
    
  * View -> Template Visual Editor
    * like TForm in Delphi
@@ -30,6 +31,9 @@ Plan is to have these visual tools:
    
  * Database Viewer
  
+ * Package Visual Django as an executable with PyInstaller
+ https://github.com/pyinstaller/pyinstaller/wiki/Recipe-Executable-From-Django
+
 
 ## Hints
 
