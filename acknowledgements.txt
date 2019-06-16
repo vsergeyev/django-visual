@@ -11,4 +11,6 @@ Ivan Bozhanov and JSTree team - https://www.jstree.com
 
 Greece acropolis icon - http://www.iconka.com
 
-Icons - https://ionicons.com
+Icons:
+ * https://ionicons.com
+ * Stefan Taubert, https://stefantaubert.com

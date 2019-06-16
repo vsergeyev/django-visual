@@ -86,3 +86,19 @@ def open_file(request):
 		content = f.read()
 
 	return HttpResponse(content, content_type='application/octet-stream')
+
+def save_file(request):
+	"""
+	Saves file in IDE editor.
+	"""
+
+	if request.method == "POST":
+		path = request.POST.get("path", "")
+		content = request.POST.get("content", "")
+
+		with open(path, 'w') as f:
+			f.write(content)
+
+		return HttpResponse("File saved")
+
+	return HttpResponse("POST 'path' and 'content' of file to save")

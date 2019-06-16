@@ -17,12 +17,11 @@ function project_tree_open_file(label, path) {
 
 	$('<li class="nav-item">'
 	  + '<a href="#editor-' + ts + '" class="nav-link bg-light" id="tab-' + ts + '" data-toggle="tab" role="tab" '
-	  + 'aria-controls="editor-' + ts + '" data-path="' + path + '"><span>' + label
+	  + 'data-path="' + path + '"><span>' + label
 	  + '</span> <i class="glyphicon glyphicon-close close-tab" data-panel="' + ts + '">&nbsp;</i></a>'
 		  + '</li>').appendTo("#center_column_tabs");
 
-	$('<div class="tab-pane fade h-100" id="editor-' + ts + '" role="tabpanel" '
-	  + 'aria-labelledby="tab-' + ts + '">'
+	$('<div class="tab-pane h-100" id="editor-' + ts + '" role="tabpanel">'
 	  + '<div class="code-editor" id="code-editor-' + ts + '"></div>'
 	  + '</div>').appendTo('#center_column_tabs_content');
 
@@ -37,4 +36,12 @@ function project_tree_open_file(label, path) {
 	} else {
 		load_file(path, ts);
 	};
+}
+
+function project_tree_save_file(path) {
+	var content = $("#active_editor").val();
+
+	$.post("/ide/save_file/", {"path": path, "content": content}, function(data) {
+		console.log(data);
+	});
 }

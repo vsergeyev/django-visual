@@ -16,10 +16,15 @@ function load_file(path, el) {
 		editor.setFontSize(14);
 
 		editor.getSession().on("change", function () {
-		    // textarea.val(editor.getSession().getValue());
+		    $("#active_editor").val(editor.getSession().getValue());
+		    
 		    var label = $("#tab-" + tid + " span").text();
-		    if (!label.endsWith(" *")) {
-		    	$("#tab-" + tid + " span").text(label + " *");
+		    
+		    if (!label.endsWith(" * ")) {
+		    	$("#tab-" + tid + " span").text(label + " * ");
+		    	$("#tab-" + tid + " span").after(
+		    		'<i class="glyphicon glyphicon-save save-tab" data-panel="' + tid + '">&nbsp;</i>'
+		    	);
 		    }
 
 		});

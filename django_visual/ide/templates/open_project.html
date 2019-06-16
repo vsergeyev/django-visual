@@ -129,22 +129,22 @@
     	<!-- Editor Area -->
     	<ul class="nav nav-tabs" id="center_column_tabs" role="tablist">
 		  <li class="nav-item">
-		    <a href="#welcome-editor" class="nav-link active bg-light" id="welcome-tab" data-toggle="tab" role="tab" aria-controls="welcome-editor" aria-selected="true">
+		    <a href="#welcome-editor" class="nav-link active bg-light" id="welcome-tab" data-toggle="tab" role="tab" aria-selected="true">
 		    	Welcome
 		    </a>
 		  </li>
 		  <li class="nav-item">
-		    <a href="#structure-editor" class="nav-link bg-light" id="structure-tab" data-toggle="tab" role="tab" aria-controls="structure-editor">
+		    <a href="#structure-editor" class="nav-link bg-light" id="structure-tab" data-toggle="tab" role="tab">
 		    	Project Structure
 		    </a>
 		  </li>
 		</ul>
 		<div class="tab-content h-100 border-left" id="center_column_tabs_content">
-		  <div class="tab-pane fade show active h-100" id="welcome-editor" role="tabpanel" aria-labelledby="welcome-tab">
+		  <div class="tab-pane show active h-100" id="welcome-editor" role="tabpanel">
 		  	<iframe style="height: 100%; width: 100%; border: 0" src="https://vsergeyev.github.io/django-visual/"></iframe>
 		  </div>
 
-		  <div class="tab-pane fade show active h-100 p-3" id="structure-editor" role="tabpanel" aria-labelledby="structure-tab">
+		  <div class="tab-pane h-100 p-3" id="structure-editor" role="tabpanel">
 
 		  	<img class="img-fluid" src="http://yuml.me/diagram/boring;dir:lr/class/{% for item, models in project_apps.iteritems %}[{{project_id}}]<>->[{{item}}], {% for model in models %}[{{item}}]<>->[{{model.name}}], {% endfor %}{% endfor %}" >
 
@@ -164,7 +164,7 @@
 		  	{% if 'django.contrib' in item %}
 
 		    {% else %}
-			  <div class="tab-pane fade h-100 p-3" id="model-editor-{{item}}" role="tabpanel">
+			  <div class="tab-pane h-100 p-3" id="model-editor-{{item}}" role="tabpanel">
 			  	{% for model in models %}
 				<div class="card">
 					<ul class="nav nav-tabs">
@@ -187,7 +187,7 @@
 				</div>
 				{% empty %}
 					<p>
-						No models defiled
+						No models defined
 					</p>
 				{% endfor %}
 			  </div>
@@ -316,6 +316,9 @@
 		</div>
 
     </div>
+
+    <!-- Hidden textarea to save file in active editor on "Save" button click -->
+    <textarea id="active_editor" style="display: none"></textarea>
 </div>
 
 <script>
@@ -362,20 +365,30 @@
 			$('#tab-' + panel).tab('show');
 		});
 
-		$("#center_column_tabs").on("click", "i.close-tab", function() {
-			var panel = $(this).data("panel");
-			//console.log(panel);
-			$("#tab-" + panel).remove();
-			$("#editor-" + panel).remove();
-			$("#welcome-tab").tab("show");
-		});
-
 		$("#center_column_tabs_content").on("click", "i.open-file", function() {
 			project_tree_open_file(
 				$(this).text(),
 				$(this).data("path")
 			);
-		});		
+		});
+
+		$("#center_column_tabs").on("click", "i.close-tab", function() {
+			var tid = $(this).data("panel");
+
+			$("#tab-" + tid).parent().prev('li').find('a').tab("show");
+			$("#tab-" + tid).remove();
+			$("#editor-" + tid).remove();
+		});
+
+		$("#center_column_tabs").on("click", "i.save-tab", function() {
+			var tid = $(this).data("panel");
+			var path = $("#tab-" + tid).data("path");
+
+			project_tree_save_file(path);
+
+			$("#tab-" + tid + " span").text($("#tab-" + tid + " span").text().replace(" * ", ""));
+			$("#tab-" + tid + " i.save-tab").remove();
+		});
 
     });
 </script>
