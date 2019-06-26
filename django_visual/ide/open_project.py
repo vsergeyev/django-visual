@@ -21,12 +21,7 @@ def project_context(project_id, project_home):
 	Parses Django project
 	"""
 
-	# https://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path
-	project_settings = imp.load_source('{}_settings'.join(project_id), os.path.join(
-		project_home,
-		project_id,
-		"settings.py"
-	))
+	pr_settings = project_settings(project_id, project_home)
 
 	old_path = sys.path
 	old_app_configs = apps.app_configs
@@ -35,13 +30,13 @@ def project_context(project_id, project_home):
 
 	apps.ready = False
 	apps.app_configs = {}
-	apps.populate(installed_apps=project_settings.INSTALLED_APPS)
+	apps.populate(installed_apps=pr_settings.INSTALLED_APPS)
 
 	all_models = apps.all_models
 
 	project_apps = collections.OrderedDict()
 
-	for app in project_settings.INSTALLED_APPS:
+	for app in pr_settings.INSTALLED_APPS:
 		project_apps[app] = []
 
 	for app, models in all_models.iteritems():
@@ -92,12 +87,26 @@ def project_context(project_id, project_home):
 		"project_id": project_id,
 		"project_home": project_home,
 		"project_apps": project_apps,
-		"project_databases": project_settings.DATABASES,
+		"project_databases": pr_settings.DATABASES,
 		"project_urls": project_urls, # project_urls.urlpatterns
 		"project_tree": project_tree
 	}
 
 	return context
+
+
+def project_settings(project_id, project_home):
+	"""
+	Loads and returns project settings module
+	"""
+
+	# https://stackoverflow.com/questions/67631/how-to-import-a-module-given-the-full-path
+	return imp.load_source('{}_settings'.join(project_id), os.path.join(
+		project_home,
+		project_id,
+		"settings.py"
+	))
+
 
 def parse_urls(source):
 	"""
@@ -124,6 +133,53 @@ def parse_urls(source):
 				grep_urls = False
 
 	return res
+
+
+def edit_installed_apps(project_id, project_home, new_installed_apps):
+	"""
+	Replaces INSTALLED_APPS in project settings.py with new list
+	"""
+
+	# TODO: implement it with ast / nodes transforms
+
+	START_MARKER = "INSTALLED_APPS = ["
+	END_MARKER = "]"
+
+	path = os.path.join(
+		project_home,
+		project_id,
+		"settings.py"
+	)
+
+	is_apps = False
+	is_changed = False
+	new_source = []
+
+	with open(path, 'r') as f:
+		for line in f:
+			if START_MARKER in line:
+				is_apps = True
+
+			if is_apps and END_MARKER in line:
+				is_apps = False
+
+			if is_apps and is_changed:
+				pass
+
+			if is_apps and not is_changed:
+				new_source.append("{}\n".format(START_MARKER))
+				for app in new_installed_apps:
+					new_source.append("    '{}',\n".format(app))
+				is_changed = True
+
+			if not is_apps:
+				new_source.append(line)
+
+	with open(path, 'w') as f:
+		f.write("".join(new_source))
+
+	return "ok"
+
 
 def build_project_tree(project_id, path):
 	"""

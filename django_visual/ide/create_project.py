@@ -30,3 +30,27 @@ def copy_project_template(template_name, project_name):
 	cmd.validate_name(project_name, "project")
 
 	cmd.handle('project', project_name, projects_home, **options)
+
+
+def copy_application_template(project_home, app_name):
+	"""
+	Copies template of new application
+	"""
+
+	app_tpl = os.path.join(
+		settings.TEMPLATES_HOME,
+		'app_template'
+	)
+
+	options = {
+		'verbosity': 2,
+		'extensions': ['py'],
+		'files': [],
+		'template': app_tpl,
+	}
+
+	cmd = TemplateCommand()
+
+	cmd.validate_name(app_name, "app")
+
+	cmd.handle('app', app_name, project_home, **options)

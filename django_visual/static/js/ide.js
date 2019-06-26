@@ -31,6 +31,7 @@ function project_tree_open_file(label, path) {
 		load_db(path, 'code-editor-' + ts);
 
 	} else if (label.endsWith("models.py")) {
+		// TODO: open model designer?
 		load_file(path, ts);
 
 	} else {
@@ -42,6 +43,12 @@ function project_tree_save_file(path) {
 	var content = $("#active_editor").val();
 
 	$.post("/ide/save_file/", {"path": path, "content": content}, function(data) {
+		console.log(data);
+	});
+}
+
+function add_application(app_name) {
+	$.post("add_application/", {"app_name": app_name}, function(data) {
 		console.log(data);
 	});
 }
