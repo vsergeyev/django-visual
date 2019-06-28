@@ -25,7 +25,7 @@ def project_context(project_id, project_home):
 
 	old_path = sys.path
 	old_app_configs = apps.app_configs
-	
+
 	sys.path.append(project_home)
 
 	apps.ready = False
@@ -200,3 +200,39 @@ def build_project_tree(project_id, path):
 	res[project_id] = build_tree(path)
 
 	return res
+
+
+def application_add_model(project_id, project_home, data):
+	"""
+	Adds new model into application from POST data
+	"""
+
+	application = data.get("application", "")
+	new_model_name = data.get("new_model_name", "")
+	fields = zip(
+		data.getlist('new_model_field_id'),
+		data.getlist('new_model_field_type'),
+		data.getlist('new_model_field_options')
+	)
+
+	if not application:
+		return
+
+	path = os.path.join(project_home, application, "models.py")
+	with open(path, "a") as f:
+		f.write("\n")
+		f.write("\nclass {}(models.Model):".format(new_model_name))
+		if data.get("new_model_field_id", ""):
+			for field_id, field_type, field_options in fields:
+				f.write("\n    {} = models.{}({})".format(field_id, field_type, field_options))
+		else: # model with id only
+			f.write("\n    pass")
+		f.write("\n")
+
+	# import pdb; pdb.set_trace()
+
+
+def application_edit_model(project_id, project_home, data):
+	"""
+	Put changes in model into application from POST data
+	"""

@@ -63,3 +63,11 @@ li.jstree-leaf > a .jstree-icon {background:url("/static/imgs/i/file.png") 0px 0
   background: url("/static/imgs/i/save.svg");
   background-size: 16px;
 }
+
+i.open-file {
+  cursor: pointer;
+}
+
+.nav-link {
+  padding: .3rem .5rem;
+}

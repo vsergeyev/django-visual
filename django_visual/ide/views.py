@@ -12,8 +12,18 @@ from django.http import HttpResponse
 from django.core.management.base import CommandError
 from django.conf import settings, Settings
 
-from create_project import copy_project_template, copy_application_template
-from open_project import project_context, project_settings, edit_installed_apps
+from create_project import (
+	copy_project_template,
+	copy_application_template
+)
+
+from open_project import (
+	project_context,
+	project_settings,
+	edit_installed_apps,
+	application_add_model,
+	application_edit_model
+)
 
 
 def index(request):
@@ -21,7 +31,7 @@ def index(request):
 	IDE welcome
 	Open or Create Project
 	"""
-	
+
 	projects_home = settings.PROJECTS_HOME
 	projects = []
 	for node in os.listdir(projects_home):
@@ -62,7 +72,7 @@ def create_project(request):
 			return render(request, 'create_project.html', context)
 
 		return redirect('open_project', project_id=title)
-	
+
 	return render(request, 'create_project.html', context)
 
 
@@ -99,6 +109,17 @@ def add_application(request, project_id):
 	else:
 		return HttpResponse("POST 'app_name' of new application to create")
 
+
+def add_model(request, project_id):
+	"""
+	Creates new model in application specified in POST data
+	"""
+	project_home = join(settings.PROJECTS_HOME, project_id)
+
+	if request.method == "POST":
+		application_add_model(project_id, project_home, request.POST)
+
+	return redirect("open_project", project_id=project_id)
 
 def open_file(request):
 	"""
