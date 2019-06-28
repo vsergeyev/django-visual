@@ -8,7 +8,7 @@
 <div class="row no-gutters h-100">
 	<nav class="navbar navbar-expand-md navbar-light fixed-top bg-light border-bottom">
 	  	<a class="navbar-brand" href="/">
-	        <img src="/static/imgs/vdj.png" alt="VDj" style="width: 1.5em" class="float-left" />
+	        <img src="/static/imgs/vdj.png" alt="VDj" style="width: 1.5em" class="float-left pr-1" />
 	        Visual Django
 	    </a>
 
@@ -33,18 +33,18 @@
 	        <div class="card-block px-2">
 		    	<div id="project_tree" class="p-2 border-left">
 		    		<p>
-				    	The fundamental unit of a Django web application is a <a href="https://djangobook.com/mdj2-django-structure/" target=_blank>Django project</a>. A Django project is made up one or more Django applications. For example a blog, a users contacts app or an event calendar. 
+				    	The fundamental unit of a Django web application is a <a href="https://djangobook.com/mdj2-django-structure/" target=_blank>Django project</a>. A Django project is made up one or more Django applications. For example a blog, a users contacts app or an event calendar.
 				    </p>
 		    		<p>
 				    	<img src="/static/imgs/project_structure.png" class="img-fluid" alt="Django Project structure" />
 				    </p>
-				    
+
 				</div>
 			</div>
 		</div>
 
     </div>
-    
+
     <div id="center_column" class="col">
     	<!-- Editor Area -->
     	<ul class="nav nav-tabs" id="center_column_tabs" role="tablist">
@@ -81,7 +81,7 @@
 				  </div>
 
 				  <div class="tab-pane fade {% if not projects %}show active{% endif %}" id="v-pills-new" role="tabpanel" aria-labelledby="v-pills-new-tab">
-				  	
+
 				  	{% for item in templates %}
 				        <div class="card flex-row flex-wrap mb-3">
 					        <div class="card-header border-0">
@@ -137,7 +137,7 @@
 <script>
 	/* JS Goes Here */
     var splitobj = Split(["#navigator_column","#center_column","#properties_column"], {
-        elementStyle: function (dimension, size, gutterSize) { 
+        elementStyle: function (dimension, size, gutterSize) {
             $(window).trigger('resize'); // Optional
             return {'flex-basis': 'calc(' + size + '% - ' + gutterSize + 'px)'}
         },

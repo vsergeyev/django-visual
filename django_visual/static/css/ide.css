@@ -64,6 +64,11 @@ li.jstree-leaf > a .jstree-icon {background:url("/static/imgs/i/file.png") 0px 0
   background-size: 16px;
 }
 
+.glyphicon-edit {
+  background: url("/static/imgs/i/edit.svg");
+  background-size: 16px;
+}
+
 i.open-file {
   cursor: pointer;
 }

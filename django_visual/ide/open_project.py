@@ -229,6 +229,12 @@ def application_add_model(project_id, project_home, data):
 			f.write("\n    pass")
 		f.write("\n")
 
+	path_admin = os.path.join(project_home, application, "admin.py")
+	with open(path_admin, "a") as f:
+		f.write("\n")
+		f.write("\nadmin.site.register({})".format(new_model_name))
+		f.write("\n")
+
 	# import pdb; pdb.set_trace()
 
 

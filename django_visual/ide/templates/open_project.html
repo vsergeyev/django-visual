@@ -21,7 +21,7 @@
 <div class="row no-gutters full-height">
 	<nav class="navbar navbar-expand-md navbar-light fixed-top bg-light border-bottom">
 	  	<a class="navbar-brand" href="/">
-	        <img src="/static/imgs/vdj.png" alt="VDj" style="width: 1.5em" class="float-left" />
+	        <img src="/static/imgs/vdj.png" alt="VDj" style="width: 1.5em" class="float-left pr-1" />
 	        Visual Django
 	    </a>
 
@@ -259,7 +259,7 @@
 	        <div class="card-block px-2">
 		    	<div class="list-group list-group-flush">
 		    		<div class="list-group-item">
-				    	django built-in
+				    	django.contrib.*
 
 				    	<div class="dropdown float-right">
 						  <button class="badge badge-info badge-pill btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -280,7 +280,7 @@
 
 		    		{% else %}
 					  <div class="list-group-item list-group-item-action">
-					  	<a href="#" data-panel="model-editor-{{item}}" class="list-group-item-action open-model-editor">{{item}}</a>
+					  	<a href="#" data-panel="model-editor-{{item}}" class="list-group-item-action open-model-editor"><i class="glyphicon glyphicon-edit"></i> {{item}}</a>
 
 					  	{% if models %}
 					  	<div class="dropdown float-right">
@@ -499,6 +499,8 @@
 
 		$("#center_column").on("click", "a.remove-model-field-row", function() {
 			$(this).parent().remove();
+
+			return false;
 		});
 
 		$("#center_column").on("click", "a.add-model-field-row", function() {

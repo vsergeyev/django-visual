@@ -159,7 +159,7 @@ def run_project(request, project_id):
 	Run given project manage.py runserver 8001
 	"""
 	project_home = join(settings.PROJECTS_HOME, project_id)
-
+	# TODO: makemigrations && migrate
 	if request.method == "POST":
 		command = "{} {} runserver --settings {}.settings 8001".format(
 			sys.executable,
