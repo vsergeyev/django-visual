@@ -14,7 +14,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-
+TOP_DIR = os.path.abspath(os.path.join(BASE_DIR, os.pardir))
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.11/howto/deployment/checklist/
@@ -136,7 +136,7 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
 
-PROJECTS_HOME = os.path.join(BASE_DIR, 'projects')
+PROJECTS_HOME = os.path.join(TOP_DIR, 'projects')
 TEMPLATES_HOME = os.path.join(BASE_DIR, 'conf')
 
 PROJECTS_TEMPLATES = [

@@ -9,10 +9,10 @@ function load_db(path, el) {
 	xhr.responseType = 'arraybuffer';
 
 	xhr.onload = function(e) {
-		var data = new Uint8Array(this.response); 
+		var data = new Uint8Array(this.response);
 		var db = new SQL.Database(new Uint8Array(data));
 		var tables = db.prepare("SELECT * FROM sqlite_master WHERE type='table' ORDER BY name");
-		
+
 		while (tables.step()) {
             var rowObj = tables.getAsObject();
             var name = rowObj.name;
@@ -51,7 +51,7 @@ function render_db(data, el) {
 			count = select.values.length;
 		}
 
-		$('<a class="nav-link" data-toggle="pill" id="' + el + '-tables' + index + '" '
+		$('<a class="nav-link bg-blue" data-toggle="pill" id="' + el + '-tables' + index + '" '
 	      + 'href="#' + el + '-data' + index + '" role="tab" aria-controls="' + el + '-data' + index + '" '
 	      + 'aria-selected="false">' + name + ' (' + count + ' )</a>').appendTo("#" + el + '-tables');
 

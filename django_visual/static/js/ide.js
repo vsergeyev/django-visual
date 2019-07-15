@@ -16,7 +16,7 @@ function project_tree_open_file(label, path) {
 	var ts = + new Date();
 
 	$('<li class="nav-item">'
-	  + '<a href="#editor-' + ts + '" class="nav-link bg-light" id="tab-' + ts + '" data-toggle="tab" role="tab" '
+	  + '<a href="#editor-' + ts + '" class="nav-link bg-blue" id="tab-' + ts + '" data-toggle="tab" role="tab" '
 	  + 'data-path="' + path + '"><span>' + label
 	  + '</span> <i class="glyphicon glyphicon-close close-tab" data-panel="' + ts + '">&nbsp;</i></a>'
 		  + '</li>').appendTo("#center_column_tabs");

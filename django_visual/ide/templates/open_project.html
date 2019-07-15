@@ -31,9 +31,17 @@
 	    	Project: {{project_id}}
 	    </a>
 
-	    <a class="btn btn-success btn-sm" href="#" data-toggle="modal" data-target="#run_project_modal">
+	    <!-- <a class="btn btn-success btn-sm" href="#" data-toggle="modal" data-target="#run_project_modal">
           Run
-        </a>
+        </a> -->
+
+	    <a class="btn btn-primary btn-sm" href="#" id="debug_project_btn">
+			Run
+		</a>
+		&nbsp;
+		<a class="btn btn-danger btn-sm" href="#" id="stop_project_btn">
+			Stop
+		</a>
 
 	    <div class="collapse navbar-collapse" id="navbarCollapse">
 	      <ul class="navbar-nav mr-auto">
@@ -80,7 +88,7 @@
     <div id="navigator_column" class="col">
     	<ul class="nav nav-tabs">
 		  <li class="nav-item">
-		    <a class="nav-link active bg-light" role="tab">Project Navigator</a>
+		    <a class="nav-link bg-blue" role="tab">Project Navigator</a>
 		  </li>
 		</ul>
 		<div class="card border-0">
@@ -129,13 +137,18 @@
     	<!-- Editor Area -->
     	<ul class="nav nav-tabs" id="center_column_tabs" role="tablist">
 		  <li class="nav-item">
-		    <a href="#welcome-editor" class="nav-link active bg-light" id="welcome-tab" data-toggle="tab" role="tab" aria-selected="true">
+		    <a href="#welcome-editor" class="nav-link active bg-blue" id="welcome-tab" data-toggle="tab" role="tab" aria-selected="true">
 		    	Welcome
 		    </a>
 		  </li>
 		  <li class="nav-item">
-		    <a href="#structure-editor" class="nav-link bg-light" id="structure-tab" data-toggle="tab" role="tab">
+		    <a href="#structure-editor" class="nav-link bg-blue" id="structure-tab" data-toggle="tab" role="tab">
 		    	Project Structure
+		    </a>
+		  </li>
+		  <li class="nav-item">
+		    <a href="#run-output" class="nav-link bg-blue" id="structure-tab" data-toggle="tab" role="tab">
+		    	Console
 		    </a>
 		  </li>
 		</ul>
@@ -158,6 +171,10 @@
 			-->
 
 		  	<p>Diagram is drawn using <a href="https://yuml.me" target=_blank>https://yuml.me</a></p>
+		  </div>
+
+		  <div class="tab-pane h-100 p-3" id="run-output" role="tabpanel" style="background-color: #000; color: #fff">
+		  	<pre id="run-output-log" style="color: #fff">Run project to get console output</pre>
 		  </div>
 
 		  {% for item, models in project_apps.iteritems %}
@@ -253,7 +270,7 @@
     	<div class="card">
     		<ul class="nav nav-tabs">
 			  <li class="nav-item">
-			    <a class="nav-link active bg-light" role="tab">Applications</a>
+			    <a class="nav-link bg-blue" role="tab">Applications</a>
 			  </li>
 			</ul>
 	        <div class="card-block px-2">
@@ -312,7 +329,7 @@
 		<div class="card">
 	        <ul class="nav nav-tabs">
 			  <li class="nav-item">
-			    <span class="nav-link active bg-light" role="tab">Databases</span>
+			    <span class="nav-link bg-blue" role="tab">Databases</span>
 			  </li>
 			</ul>
 	        <div class="card-block px-2">
@@ -347,7 +364,7 @@
 		<div class="card">
 	        <ul class="nav nav-tabs">
 			  <li class="nav-item">
-			    <span class="nav-link active bg-light" role="tab">URLs</span>
+			    <span class="nav-link bg-blue" role="tab">URLs</span>
 			  </li>
 			</ul>
 	        <div class="card-block px-2">
@@ -395,27 +412,6 @@
   </div>
 </div>
 
-
-<div id="run_project_modal" class="modal" tabindex="-1" role="dialog">
-  <div class="modal-dialog" role="document" style="max-width: 800px">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Your project is running on <a target=_blank href="http://127.0.0.1:8001">http://127.0.0.1:8001</a></h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <pre id="project_stdout" style="width: 100%; height: 400px; background-color: #000; color: #fff; padding: 10px"></pre>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Stop</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-
 </div>
 
 <script>
@@ -441,6 +437,7 @@
     var PROJECT_HOME =  "{{project_home}}";
 
     var PROJECT_PID = -1;
+    var PROJECT_TIMER_ID = 0;
 
     $('#project_tree').jstree().on('ready.jstree', function(){
     	$.jstree.defaults.core.multiple = false;
@@ -462,7 +459,7 @@
 
 			if ($('#tab-' + panel).length == 0) {
 				$('<li class="nav-item">'
-		    	  + '<a href="#' + panel + '" class="nav-link" id="tab-' + panel + '" data-toggle="tab" role="tab" '
+		    	  + '<a href="#' + panel + '" class="nav-link bg-blue" id="tab-' + panel + '" data-toggle="tab" role="tab" '
 		    	  + 'aria-controls="' + panel + '">Application: ' + label + '</a>'
 		  		  + '</li>').appendTo("#center_column_tabs");
 			}
@@ -540,33 +537,38 @@
 		$("#id_new_app_name").val("");
 	});
 
-	$('#run_project_modal').on('show.bs.modal', function (e) {
-		$("#project_stdout").html("");
+	$('#debug_project_btn').on('click', function (e) {
+		$("#run-output-log").html("Starting development server at http://127.0.0.1:8001/");
+		$('.nav-tabs a[href="#run-output"]').tab('show');
 
 		$.post("run_project/", {}, function(data) {
 			console.log(data);
 
 			PROJECT_PID = data;
 
-			$("#project_stdout").html("PROCESS STARTED WITH ID " + PROJECT_PID);
-			$("#project_stdout").append("\n\nStarting development server at http://127.0.0.1:8001/");
+			$("#run-output-log").html("PROCESS STARTED WITH ID " + PROJECT_PID);
+			$("#run-output-log").append("\n\nStarting development server at http://127.0.0.1:8001/");
 
 			setTimeout(function() {
 				window.open("http://127.0.0.1:8001/");
-			}, 1000);
+			}, 2000);
 
-			// var timerId = setInterval(function() {
-			// 	$.get("run_project/", {"pid": PROJECT_PID}, function(data) {
-			// 		console.log(data);
-			// 		$("#project_stdout").append(data);
-			// 	});
-			// }, 500);
+			PROJECT_TIMER_ID = setInterval(function() {
+				$.get("run_project/", {"pid": PROJECT_PID}, function(data) {
+					console.log(data);
+					$("#run-output-log").html(data);
+				});
+			}, 5000);
 		});
 	});
 
-	$('#run_project_modal').on('hidden.bs.modal', function (e) {
+	$('#stop_project_btn').on('click', function (e) {
+		clearInterval(PROJECT_TIMER_ID);
+
+		$("#run-output-log").append("\n\nStopping development server...");
+
 		$.post("stop_project/", {"pid": PROJECT_PID}, function(data) {
-			console.log(data);
+			$("#run-output-log").append(data);
 		});
 	});
 </script>

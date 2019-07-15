@@ -25,6 +25,8 @@ from open_project import (
 	application_edit_model
 )
 
+from run import run_manage
+
 
 def index(request):
 	"""
@@ -161,31 +163,14 @@ def run_project(request, project_id):
 	project_home = join(settings.PROJECTS_HOME, project_id)
 	# TODO: makemigrations && migrate
 	if request.method == "POST":
-		command = "{} {} runserver --settings {}.settings 8001".format(
-			sys.executable,
-			join(project_home, "manage.py"),
-			project_id
-		)
-
-		proc = subprocess.Popen(command, shell=True, stdin=subprocess.PIPE, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-
-		out = ""
-		# i = 0
-		# while i < 10:
-		# 	nextline = proc.stdout.readline()
-		# 	print nextline
-		# 	if nextline == '' and proc.poll() is not None:
-		# 		break
-
-		# 	out += "/n" + nextline
-		# 	i += 1
-
-		# return HttpResponse({"pid": proc.pid, "out": out})
-		return HttpResponse(proc.pid)
+		pid = run_manage(project_id, project_home)
+		return HttpResponse(pid)
 
 	pid = request.GET.get("pid", "")
 	if pid:
-		pass
+		fh = open(join(settings.TOP_DIR, 'project_run.log'), 'r')
+		data = fh.read()
+		return HttpResponse(data)
 
 
 def stop_project(request, project_id):
@@ -196,7 +181,10 @@ def stop_project(request, project_id):
 	if request.method == "POST":
 		pid = request.POST.get("pid", "")
 		if pid:
-			os.kill(int(pid), 9)
-			return HttpResponse("OK")
+			try:
+				os.kill(int(pid), 9)
+				return HttpResponse("OK")
+			except OSError, e:
+				return HttpResponse(str(e))
 
 	return HttpResponse("")
