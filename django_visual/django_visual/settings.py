@@ -99,9 +99,9 @@ STATIC_URL = '/static/'
 
 STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static"),
-]
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "static"),
+# ]
 
 PROJECTS_HOME = os.path.join(TOP_DIR, 'projects')
 TEMPLATES_HOME = os.path.join(BASE_DIR, 'conf')
