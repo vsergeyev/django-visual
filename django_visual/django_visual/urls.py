@@ -14,7 +14,7 @@ Including another URLconf
     2. Add a URL to urlpatterns:  url(r'^blog/', include('blog.urls'))
 """
 from django.conf.urls import url, include
-# from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 
 from ide import views
 
@@ -24,3 +24,5 @@ urlpatterns = [
     url(r'^ide/', include('ide.urls')),
     url(r'^$', views.index, name='index')
 ]
+
+urlpatterns += staticfiles_urlpatterns()
