@@ -36,7 +36,14 @@ def index(request):
 
 	projects_home = settings.PROJECTS_HOME
 	projects = []
-	for node in os.listdir(projects_home):
+	try:
+		nodes = os.listdir(projects_home)
+	except OSError as e:
+		# Projects dir may not exist, let create it
+		os.mkdir(projects_home)
+		nodes = []
+
+	for node in nodes:
 		if isdir(join(projects_home, node)):
 			projects.append(node)
 
