@@ -12,6 +12,8 @@ https://docs.djangoproject.com/en/1.11/ref/settings/
 
 import os
 
+# import django_heroku
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 TOP_DIR = os.path.abspath(os.path.join(BASE_DIR, os.pardir))
@@ -97,11 +99,11 @@ USE_TZ = True
 
 STATIC_URL = '/static/'
 
-STATIC_ROOT = os.path.join(BASE_DIR, "static")
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
 
-# STATICFILES_DIRS = [
-#     os.path.join(BASE_DIR, "static"),
-# ]
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, "static"),
+]
 
 PROJECTS_HOME = os.path.join(TOP_DIR, 'projects')
 TEMPLATES_HOME = os.path.join(BASE_DIR, 'conf')
@@ -117,3 +119,9 @@ PROJECT_NAMES = ['shiny', 'crazy', 'frog', 'squirrel', 'nut', 'bold',
     'hamster', 'blog', 'site', 'red', 'dead', 'last', 'first', 'super', 'cool',
     'brilliant', 'py', 'web', 'app', 'hello'
 ]
+
+# STATIC_URL = '/static/'
+
+# STATIC_ROOT = os.path.join(BASE_DIR, "static")
+
+# django_heroku.settings(locals())

@@ -1,1 +1,1 @@
-web: gunicorn django_visual.wsgi
+web: gunicorn --pythonpath="$PWD/django_visual" django_visual.wsgi
