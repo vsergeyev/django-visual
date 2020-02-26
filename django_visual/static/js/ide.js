@@ -47,10 +47,21 @@ function project_tree_save_file(path) {
 	});
 }
 
+function create_application(app_name) {
+	$.post("create_application/", {"app_name": app_name}, function(data) {
+		console.log(data);
+		document.location.reload();
+	});
+}
+
 function add_application(app_name) {
 	$.post("add_application/", {"app_name": app_name}, function(data) {
 		console.log(data);
+	});
+}
 
-		document.location.reload();
+function remove_application(app_name) {
+	$.post("remove_application/", {"app_name": app_name}, function(data) {
+		console.log(data);
 	});
 }

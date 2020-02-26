@@ -30,7 +30,11 @@ def project_context(project_id, project_home):
 
 	apps.ready = False
 	apps.app_configs = {}
-	apps.populate(installed_apps=pr_settings.INSTALLED_APPS)
+	has_apps_error = ""
+	try:
+		apps.populate(installed_apps=pr_settings.INSTALLED_APPS)
+	except ImportError as e:
+		has_apps_error = str(e)
 
 	all_models = apps.all_models
 
@@ -89,7 +93,8 @@ def project_context(project_id, project_home):
 		"project_settings_file": project_settings_file,
 		"project_urls": project_urls, # project_urls.urlpatterns
 		"project_urls_file": project_urls_file,
-		"project_tree": project_tree
+		"project_tree": project_tree,
+		"has_apps_error": has_apps_error
 	}
 
 	return context

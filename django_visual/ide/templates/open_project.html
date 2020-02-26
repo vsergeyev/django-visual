@@ -284,7 +284,10 @@
 			  </li>
 			</ul>
 	        <div class="card-block px-2">
-		    	<div class="list-group list-group-flush">
+	        	{% if has_apps_error %}
+	        		<div class="alert alert-danger" role="alert">Error in INSTALLED_APPS: <br />{{has_apps_error}}</div>
+	        	{% endif %}
+		    	<div class="list-group list-group-flush my_and_django_contrib_apps">
 		    		<div class="list-group-item">
 				    	django.contrib.*
 
@@ -292,10 +295,10 @@
 						  <button class="badge badge-info badge-pill btn btn-info dropdown-toggle btn-sm" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 						    Info
 						  </button>
-						  <div class="dropdown-menu dropdown-menu-right">
+						  <div class="dropdown-menu dropdown-menu-right django_contrib_apps">
 						  	{% for item, models in project_apps.iteritems %}
 		    					{% if 'django.contrib' in item %}
-						    		<a class="dropdown-item small" href="#">{{item}}</a>
+						    		<a class="dropdown-item small" href="#" id="app_sidebar_item_{{item}}">{{item}}</a>
 								{% endif %}
 				    		{% endfor %}
 						  </div>
@@ -307,7 +310,7 @@
 
 		    		{% else %}
 					  <div class="list-group-item list-group-item-action">
-					  	<a href="#" data-panel="model-editor-{{item}}" class="list-group-item-action open-model-editor"><i class="glyphicon glyphicon-edit"></i> {{item}}</a>
+					  	<a href="#" id="app_sidebar_item_{{item}}" data-panel="model-editor-{{item}}" class="list-group-item-action open-model-editor"><i class="glyphicon glyphicon-edit"></i> {{item}}</a>
 
 					  	{% if models %}
 					  	<div class="dropdown float-right">
@@ -324,16 +327,15 @@
 					  </div>
 					 {% endif %}
 				{% endfor %}
-
-				<span class="list-group-item">
-					<a href="#" class="badge badge-info badge-pill float-right" onclick="project_tree_open_file('settings.py', '{{project_settings_file}}'); return false;">Edit</a>
-					<a data-toggle="modal" data-target="#add_application_modal" href="#" class="badge badge-info badge-pill float-right">Add</a>
-				</span>
 				</div>
 			</div>
-			<!-- <div class="card-footer">
-	            Edit
-	        </div> -->
+			<div class="card-footer">
+	            <span>
+					<!-- <a href="#" class="badge badge-info badge-pill float-right" onclick="project_tree_open_file('settings.py', '{{project_settings_file}}'); return false;">Edit</a> -->
+					<a data-toggle="modal" data-target="#edit_application_modal" href="#" class="badge badge-info badge-pill float-right" >Edit</a>
+					<a data-toggle="modal" data-target="#add_application_modal" href="#" class="badge badge-info badge-pill float-right">Create</a>
+				</span>
+	        </div>
 		</div>
 
 		<div class="card">
@@ -360,15 +362,13 @@
 					</div>
 				</div>
 				{% endfor %}
-
-				<span class="list-group-item">
-					<a href="#" class="badge badge-info badge-pill float-right" onclick="project_tree_open_file('settings.py', '{{project_settings_file}}'); return false;">Edit</a>
-				</span>
 				</div>
 			</div>
-			<!-- <div class="card-footer">
-	            Edit
-	        </div> -->
+			<div class="card-footer">
+	            <span>
+					<a href="#" class="badge badge-info badge-pill float-right" onclick="project_tree_open_file('settings.py', '{{project_settings_file}}'); return false;">Edit</a>
+				</span>
+	        </div>
 		</div>
 
 		<div class="card">
@@ -384,15 +384,13 @@
 				    {{item}}
 				  </span>
 				{% endfor %}
-
-				<span class="list-group-item">
-					<a href="#" class="badge badge-info badge-pill float-right" onclick="project_tree_open_file('urls.py', '{{project_urls_file}}'); return false;">Edit</a>
-				</span>
 				</div>
 			</div>
-			<!-- <div class="card-footer">
-	            Edit
-	        </div> -->
+			<div class="card-footer">
+	            <span>
+					<a href="#" class="badge badge-info badge-pill float-right" onclick="project_tree_open_file('urls.py', '{{project_urls_file}}'); return false;">Edit</a>
+				</span>
+	        </div>
 		</div>
 
     </div>
@@ -400,6 +398,10 @@
     <!-- Hidden textarea to save file in active editor on "Save" button click -->
     <textarea id="active_editor" style="display: none"></textarea>
 </div>
+
+<!-- --------------------------------------------------------------------- -->
+<!-- MODAL DIALOGS -->
+<!-- --------------------------------------------------------------------- -->
 
 <div id="add_application_modal" class="modal" tabindex="-1" role="dialog">
   <div class="modal-dialog" role="document">
@@ -421,6 +423,40 @@
     </div>
   </div>
 </div>
+
+<div id="edit_application_modal" class="modal" tabindex="-1" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Edit Installed Applications</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+      	You may remove applications from INSTALLED_APPS (settings.py).
+      	This will not remove files on disk. So you may add these applications later again.
+      	<ul class="list-group">
+        {% for item, models in project_apps.iteritems %}
+			<li class="list-group-item"><span>{{item}}</span>
+				<a class="float-right btn btn-danger btn-remove-app" href="#">Remove</a>
+			</li>
+		{% endfor %}
+		</ul>
+		<label for="title">Add existing application</label>
+		<input type="text" name="edit_app_name" id="id_edit_app_name" value="" required class="form-control"  />
+		<a class="float-right btn btn-primary btn-add-app" href="#">Add to INSTALLED_APPS</a>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn" data-dismiss="modal">Done</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- --------------------------------------------------------------------- -->
+<!-- END DIALOGS -->
+<!-- --------------------------------------------------------------------- -->
 
 </div>
 
@@ -449,6 +485,8 @@
     var PROJECT_PID = -1;
     var PROJECT_TIMER_ID = 0;
 
+    var project_apps = [{% for item, models in project_apps.iteritems %}'{{item}}', {% endfor %}];
+
     $('#project_tree').jstree().on('ready.jstree', function(){
     	$.jstree.defaults.core.multiple = false;
 
@@ -475,6 +513,57 @@
 			}
 
 			$('#tab-' + panel).tab('show');
+		});
+
+		$("#btn_add_application").click(function() {
+			var app = $("#id_new_app_name").val();
+    		$("#add_application_modal").modal('hide');
+	    	create_application(app);
+	    });
+
+	    $('#add_application_modal').on('hidden.bs.modal', function (e) {
+			$("#id_new_app_name").val("");
+		});
+
+		$(".btn-remove-app").on("click", function() {
+			var app = $(this).parent().find('span').text();
+			$(this).parent().remove();
+
+			document.getElementById("app_sidebar_item_" + app).remove();
+			project_apps = project_apps.filter(function(value, index, arr){return value != app});
+			// console.log(project_apps);
+			remove_application(app);
+		});
+
+		$(".btn-add-app").on("click", function() {
+			var app = $("#id_edit_app_name").val();
+
+			$(this).parent().find("ul").append(
+				'<li class="list-group-item"><span>' + app + '</span>'
+			    + '<a class="float-right btn btn-danger btn-remove-app" href="#">Remove</a>'
+				+ '</li>'
+			);
+
+			if (app.indexOf("django.contrib") == -1) {
+				$("div.my_and_django_contrib_apps").append(
+					'<div class="list-group-item list-group-item-action">'
+					+ '<a href="#" id="app_sidebar_item_' + app + '" data-panel="model-editor-'
+					+ app + '" class="list-group-item-action open-model-editor">'
+					+ '<i class="glyphicon glyphicon-edit"></i> ' + app + '</a>'
+					+ '</div>'
+				);
+			} else {
+				$("div.django_contrib_apps").append(
+					'<a class="dropdown-item small" href="#" id="app_sidebar_item_' + app + '">' + app + '</a>'
+				);
+			}
+
+			project_apps.push(app);
+			// console.log(project_apps);
+
+			add_application(app);
+
+			$("#id_edit_app_name").val("");
 		});
 
 		$("#center_column_tabs_content").on("click", "i.open-file", function() {
@@ -535,19 +624,7 @@
 
     });
 
-    $("#btn_add_application").click(function() {
-    	var app_name = $("#id_new_app_name").val();
-
-    	$("#add_application_modal").modal('hide');
-
-    	add_application(app_name);
-    });
-
-    $('#add_application_modal').on('hidden.bs.modal', function (e) {
-		$("#id_new_app_name").val("");
-	});
-
-	$('#debug_project_btn').on('click', function (e) {
+    $('#debug_project_btn').on('click', function (e) {
 		$("#run-output-log").html("Starting development server at http://127.0.0.1:8001/");
 		$('.nav-tabs a[href="#run-output"]').tab('show');
 

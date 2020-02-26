@@ -98,7 +98,7 @@ def open_project(request, project_id):
 	return render(request, 'open_project.html', context)
 
 
-def add_application(request, project_id):
+def create_application(request, project_id):
 	"""
 	Creates new application for given project
 	"""
@@ -117,6 +117,44 @@ def add_application(request, project_id):
 		return HttpResponse("OK")
 	else:
 		return HttpResponse("POST 'app_name' of new application to create")
+
+
+def add_application(request, project_id):
+	"""
+	Add existing application to INSTALLED_APPS
+	"""
+	project_home = join(settings.PROJECTS_HOME, project_id)
+
+	if request.method == "POST":
+		app_name = request.POST.get("app_name")
+		pr_settings = project_settings(project_id, project_home)
+		apps = pr_settings.INSTALLED_APPS
+		apps.append(app_name)
+
+		edit_installed_apps(project_id, project_home, apps)
+
+		return HttpResponse("OK")
+	else:
+		return HttpResponse("POST 'app_name' of new application to add")
+
+
+def remove_application(request, project_id):
+	"""
+	Remove existing application from INSTALLED_APPS
+	"""
+	project_home = join(settings.PROJECTS_HOME, project_id)
+
+	if request.method == "POST":
+		app_name = request.POST.get("app_name")
+		pr_settings = project_settings(project_id, project_home)
+		apps = pr_settings.INSTALLED_APPS
+		apps.remove(app_name)
+
+		edit_installed_apps(project_id, project_home, apps)
+
+		return HttpResponse("OK")
+	else:
+		return HttpResponse("POST 'app_name' of new application to remove")
 
 
 def add_model(request, project_id):
