@@ -326,7 +326,7 @@
 				{% endfor %}
 
 				<span class="list-group-item">
-					<a href="#" class="badge badge-info badge-pill float-right">Edit</a>
+					<a href="#" class="badge badge-info badge-pill float-right" onclick="project_tree_open_file('settings.py', '{{project_settings_file}}'); return false;">Edit</a>
 					<a data-toggle="modal" data-target="#add_application_modal" href="#" class="badge badge-info badge-pill float-right">Add</a>
 				</span>
 				</div>
@@ -362,7 +362,7 @@
 				{% endfor %}
 
 				<span class="list-group-item">
-					<a href="#" class="badge badge-info badge-pill float-right">Edit</a>
+					<a href="#" class="badge badge-info badge-pill float-right" onclick="project_tree_open_file('settings.py', '{{project_settings_file}}'); return false;">Edit</a>
 				</span>
 				</div>
 			</div>
@@ -386,7 +386,7 @@
 				{% endfor %}
 
 				<span class="list-group-item">
-					<a href="#" class="badge badge-info badge-pill float-right">Edit</a>
+					<a href="#" class="badge badge-info badge-pill float-right" onclick="project_tree_open_file('urls.py', '{{project_urls_file}}'); return false;">Edit</a>
 				</span>
 				</div>
 			</div>

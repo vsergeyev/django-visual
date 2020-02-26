@@ -75,11 +75,9 @@ def project_context(project_id, project_home):
 	# ))
 	# sys.path = old_path
 
-	project_urls = parse_urls(os.path.join(
-		project_home,
-		project_id,
-		"urls.py"
-	))
+	project_settings_file = os.path.join(project_home, project_id, "settings.py")
+	project_urls_file = os.path.join(project_home, project_id, "urls.py")
+	project_urls = parse_urls(project_urls_file)
 
 	project_tree = build_project_tree(project_id, project_home)
 
@@ -88,7 +86,9 @@ def project_context(project_id, project_home):
 		"project_home": project_home,
 		"project_apps": project_apps,
 		"project_databases": pr_settings.DATABASES,
+		"project_settings_file": project_settings_file,
 		"project_urls": project_urls, # project_urls.urlpatterns
+		"project_urls_file": project_urls_file,
 		"project_tree": project_tree
 	}
 
