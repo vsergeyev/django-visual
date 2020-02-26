@@ -12,6 +12,11 @@ def copy_project_template(template_name, project_name):
 	Copies template of new projexct
 	"""
 	projects_home = settings.PROJECTS_HOME
+
+	if not os.path.isdir(projects_home):
+		# let create it first
+		os.mkdir(projects_home)
+
 	project_tpl = os.path.join(
 		settings.TEMPLATES_HOME,
 		'project_template_{}'.format(template_name)
