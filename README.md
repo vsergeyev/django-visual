@@ -2,11 +2,11 @@
 
 Inspired by Borland Delphi.
 
-Visual tools for working with Django projects (https://www.djangoproject.com)
+Visual tools to work with Django projects (https://www.djangoproject.com)
 
 ## IDE
 
-Plan is to have these visual tools:
+IDE offers capabilities and visual tools for:
 
  * New Project Templates
    * Empty project
