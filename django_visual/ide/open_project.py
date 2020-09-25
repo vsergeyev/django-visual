@@ -29,6 +29,7 @@ def project_context(project_id, project_home):
 	sys.path.append(project_home)
 
 	apps.ready = False
+	apps.loading = False
 	apps.app_configs = {}
 	has_apps_error = ""
 	try:
@@ -43,8 +44,8 @@ def project_context(project_id, project_home):
 	for app in pr_settings.INSTALLED_APPS:
 		project_apps[app] = []
 
-	for app, models in all_models.iteritems():
-		for model_label, model in models.iteritems():
+	for app, models in all_models.items():
+		for model_label, model in models.items():
 			fields = []
 			for field in model._meta.get_fields(include_parents=False):
 				fields.append({"name": field.name, "class": field.get_internal_type()})

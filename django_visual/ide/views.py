@@ -12,12 +12,12 @@ from django.http import HttpResponse
 from django.core.management.base import CommandError
 from django.conf import settings, Settings
 
-from create_project import (
+from .create_project import (
 	copy_project_template,
 	copy_application_template
 )
 
-from open_project import (
+from .open_project import (
 	project_context,
 	project_settings,
 	edit_installed_apps,
@@ -25,7 +25,7 @@ from open_project import (
 	application_edit_model
 )
 
-from run import run_manage
+from .run import run_manage
 
 
 def index(request):
@@ -75,7 +75,7 @@ def create_project(request):
 
 		try:
 			copy_project_template(template, title)
-		except CommandError, e:
+		except CommandError as e:
 			context['title'] = title
 			context['error'] = str(e)
 			return render(request, 'create_project.html', context)
@@ -229,7 +229,7 @@ def stop_project(request, project_id):
 			try:
 				os.kill(int(pid), 9)
 				return HttpResponse("OK")
-			except OSError, e:
+			except OSError as e:
 				return HttpResponse(str(e))
 
 	return HttpResponse("")

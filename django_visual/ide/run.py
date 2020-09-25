@@ -35,7 +35,7 @@ def worker(project_id, project_home):
             stdout=subprocess.PIPE,
             stderr=subprocess.PIPE
         )
-    except Exception, e:
+    except Exception as e:
         with open(log_file, 'a') as f:
             f.write(str(e) + "\n")
 

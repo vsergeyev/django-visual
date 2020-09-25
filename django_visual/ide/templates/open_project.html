@@ -169,7 +169,7 @@
 
 		  <div class="tab-pane h-100 p-3" id="structure-editor" role="tabpanel">
 
-		  	<img class="img-fluid" src="http://yuml.me/diagram/boring;dir:lr/class/{% for item, models in project_apps.iteritems %}[{{project_id}}]<>->[{{item}}], {% for model in models %}[{{item}}]<>->[{{model.name}}], {% endfor %}{% endfor %}" >
+		  	<img class="img-fluid" src="http://yuml.me/diagram/scruffy/class/{% for item, models in project_apps.iteritems %}[{{project_id}}]<>->[{{item}}], {% for model in models %}[{{item}}]<>->[{{model.name}}], {% endfor %}{% endfor %}" >
 
 		  	<!--
 		  	{% for item, models in project_apps.iteritems %}
