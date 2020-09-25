@@ -61,6 +61,11 @@ Known issues:
  * 'psycopg2' package installation may result in error. You may use 'psycopg2-binary' pre-built package as well
  * it may require to install postgresql to fix 'psycopg2' error
 
+Now it's time to start a server:
+
+    python  ./django_visual/manage.py runserver
+
+If all is fine Visual Django IDE will be accessible at 'http://127.0.0.1:8000/'
 
 ## Have a question?
 

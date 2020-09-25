@@ -169,10 +169,10 @@
 
 		  <div class="tab-pane h-100 p-3" id="structure-editor" role="tabpanel">
 
-		  	<img class="img-fluid" src="http://yuml.me/diagram/scruffy/class/{% for item, models in project_apps.iteritems %}[{{project_id}}]<>->[{{item}}], {% for model in models %}[{{item}}]<>->[{{model.name}}], {% endfor %}{% endfor %}" >
+		  	<img class="img-fluid" src="http://yuml.me/diagram/scruffy/class/{% for item, models in project_apps.items %}[{{project_id}}]<>->[{{item}}], {% for model in models %}[{{item}}]<>->[{{model.name}}], {% endfor %}{% endfor %}" >
 
 		  	<!--
-		  	{% for item, models in project_apps.iteritems %}
+		  	{% for item, models in project_apps.items %}
 		  		[{{project_id}}]<>->[{{item}}],
 		  		{% for model in models %}
 		  			[{{item}}]<>->[{{model.name}}]
@@ -187,7 +187,7 @@
 		  	<pre id="run-output-log" style="color: #fff">Run project to get console output</pre>
 		  </div>
 
-		  {% for item, models in project_apps.iteritems %}
+		  {% for item, models in project_apps.items %}
 		  	{% if 'django.contrib' in item %}
 
 		    {% else %}
@@ -296,7 +296,7 @@
 						    Info
 						  </button>
 						  <div class="dropdown-menu dropdown-menu-right django_contrib_apps">
-						  	{% for item, models in project_apps.iteritems %}
+						  	{% for item, models in project_apps.items %}
 		    					{% if 'django.contrib' in item %}
 						    		<a class="dropdown-item small" href="#" id="app_sidebar_item_{{item}}">{{item}}</a>
 								{% endif %}
@@ -305,7 +305,7 @@
 						</div>
 					</div>
 
-		    	{% for item, models in project_apps.iteritems %}
+		    	{% for item, models in project_apps.items %}
 		    		{% if 'django.contrib' in item %}
 
 		    		{% else %}
@@ -355,7 +355,7 @@
 					    Info
 					  </button>
 					  <div class="dropdown-menu dropdown-menu-right">
-					  	{% for key, value in item.iteritems %}
+					  	{% for key, value in item.items %}
 					    	<a class="dropdown-item small" href="#">{{key}}: {{value}}</a>
 					    {% endfor %}
 					  </div>
@@ -437,7 +437,7 @@
       	You may remove applications from INSTALLED_APPS (settings.py).
       	This will not remove files on disk. So you may add these applications later again.
       	<ul class="list-group">
-        {% for item, models in project_apps.iteritems %}
+        {% for item, models in project_apps.items %}
 			<li class="list-group-item"><span>{{item}}</span>
 				<a class="float-right btn btn-danger btn-remove-app" href="#">Remove</a>
 			</li>
@@ -485,7 +485,7 @@
     var PROJECT_PID = -1;
     var PROJECT_TIMER_ID = 0;
 
-    var project_apps = [{% for item, models in project_apps.iteritems %}'{{item}}', {% endfor %}];
+    var project_apps = [{% for item, models in project_apps.items %}'{{item}}', {% endfor %}];
 
     $('#project_tree').jstree().on('ready.jstree', function(){
     	$.jstree.defaults.core.multiple = false;

@@ -61,9 +61,8 @@ def project_context(project_id, project_home):
 					"fields": fields,
 				})
 
-	# print all_models
-	# print project_apps
-
+	# print(all_models)
+	# print(project_apps)
 	# import pdb; pdb.set_trace()
 
 	# restore original environment
