@@ -1,9 +1,9 @@
-from django.conf.urls import url
+from django.urls import path
 
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
-    url(r'^item/(?P<item_id>[0-9]+)/$', views.item_detail, name='item_detail'),
-    url('items/', views.item_list, name='item_list'),
+    path('', views.index, name='index'),
+    path('item/<int:item_id>/', views.item_detail, name='item_detail'),
+    path('items/', views.item_list, name='item_list'),
 ]

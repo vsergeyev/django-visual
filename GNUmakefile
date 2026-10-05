@@ -9,3 +9,6 @@ gunicorn: migrate
 runserver: migrate
 	python3 ./django_visual/manage.py runserver
 
+
+test:
+	python3 -m pytest

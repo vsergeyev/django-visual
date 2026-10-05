@@ -35,6 +35,20 @@ IDE offers capabilities and visual tools for:
  https://github.com/pyinstaller/pyinstaller/wiki/Recipe-Executable-From-Django
 
 
+## Requirements
+
+Python 3.12+ and Django 5.2 LTS or 6.1.
+
+    pip install -r requirements.txt
+    make runserver
+
+## Running tests
+
+    pip install -r requirements-dev.txt
+    pytest                  # full suite
+    pytest -m "not slow"    # skip generated-project smoke tests
+    tox                     # Django 5.2 and 6.1
+
 ## Hints
 
  * Explore project files in Project Navigator

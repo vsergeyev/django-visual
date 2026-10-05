@@ -1,31 +1,33 @@
-# -*- coding: utf-8 -*-
-
 import os
 from os.path import join, isdir
 import random
-import sys
-import subprocess
-from sys import stdout, stdin, stderr
+import signal
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse
 from django.core.management.base import CommandError
-from django.conf import settings, Settings
+from django.conf import settings
 
-from create_project import (
+from .create_project import (
 	copy_project_template,
 	copy_application_template
 )
 
-from open_project import (
+from .open_project import (
 	project_context,
 	project_settings,
 	edit_installed_apps,
 	application_add_model,
-	application_edit_model
 )
 
-from run import run_manage
+from .run import run_manage
+
+
+def installed_apps(project_id, project_home):
+	"""
+	Current INSTALLED_APPS of project as a list
+	"""
+	return list(project_settings(project_id, project_home).INSTALLED_APPS)
 
 
 def index(request):
@@ -35,17 +37,13 @@ def index(request):
 	"""
 
 	projects_home = settings.PROJECTS_HOME
-	projects = []
-	try:
-		nodes = os.listdir(projects_home)
-	except OSError as e:
-		# Projects dir may not exist, let create it
-		os.mkdir(projects_home)
-		nodes = []
+	# Projects dir may not exist, let create it
+	os.makedirs(projects_home, exist_ok=True)
 
-	for node in nodes:
-		if isdir(join(projects_home, node)):
-			projects.append(node)
+	projects = sorted(
+		node for node in os.listdir(projects_home)
+		if isdir(join(projects_home, node))
+	)
 
 	context = {
 		"projects": projects,
@@ -75,7 +73,7 @@ def create_project(request):
 
 		try:
 			copy_project_template(template, title)
-		except CommandError, e:
+		except CommandError as e:
 			context['title'] = title
 			context['error'] = str(e)
 			return render(request, 'create_project.html', context)
@@ -90,6 +88,9 @@ def open_project(request, project_id):
 	Load project structure into IDE.
 	"""
 	project_home = join(settings.PROJECTS_HOME, project_id)
+
+	if not isdir(project_home):
+		raise Http404("Project '{}' not found".format(project_id))
 
 	context = project_context(project_id, project_home)
 
@@ -106,13 +107,19 @@ def create_application(request, project_id):
 
 	if request.method == "POST":
 		app_name = request.POST.get("app_name")
-		copy_application_template(project_home, app_name)
 
-		pr_settings = project_settings(project_id, project_home)
-		apps = pr_settings.INSTALLED_APPS
-		apps.append(app_name)
+		try:
+			copy_application_template(project_home, app_name)
+		except CommandError as e:
+			return HttpResponse(str(e), status=400)
 
-		edit_installed_apps(project_id, project_home, apps)
+		try:
+			apps = installed_apps(project_id, project_home)
+		except Exception as e:
+			return HttpResponse("{}: {}".format(type(e).__name__, e), status=400)
+		if app_name not in apps:
+			apps.append(app_name)
+			edit_installed_apps(project_id, project_home, apps)
 
 		return HttpResponse("OK")
 	else:
@@ -127,11 +134,14 @@ def add_application(request, project_id):
 
 	if request.method == "POST":
 		app_name = request.POST.get("app_name")
-		pr_settings = project_settings(project_id, project_home)
-		apps = pr_settings.INSTALLED_APPS
-		apps.append(app_name)
+		try:
+			apps = installed_apps(project_id, project_home)
+		except Exception as e:
+			return HttpResponse("{}: {}".format(type(e).__name__, e), status=400)
 
-		edit_installed_apps(project_id, project_home, apps)
+		if app_name and app_name not in apps:
+			apps.append(app_name)
+			edit_installed_apps(project_id, project_home, apps)
 
 		return HttpResponse("OK")
 	else:
@@ -146,11 +156,14 @@ def remove_application(request, project_id):
 
 	if request.method == "POST":
 		app_name = request.POST.get("app_name")
-		pr_settings = project_settings(project_id, project_home)
-		apps = pr_settings.INSTALLED_APPS
-		apps.remove(app_name)
+		try:
+			apps = installed_apps(project_id, project_home)
+		except Exception as e:
+			return HttpResponse("{}: {}".format(type(e).__name__, e), status=400)
 
-		edit_installed_apps(project_id, project_home, apps)
+		if app_name in apps:
+			apps.remove(app_name)
+			edit_installed_apps(project_id, project_home, apps)
 
 		return HttpResponse("OK")
 	else:
@@ -168,9 +181,11 @@ def add_model(request, project_id):
 
 	return redirect("open_project", project_id=project_id)
 
+
 def open_file(request):
 	"""
 	Retrieves file content into IDE to edit.
+	Read as bytes: SQL viewer loads db.sqlite3 through here.
 	"""
 
 	path = request.GET.get("path", "")
@@ -178,7 +193,7 @@ def open_file(request):
 	if not path:
 		return HttpResponse("")
 
-	with open(path, 'r') as f:
+	with open(path, 'rb') as f:
 		content = f.read()
 
 	return HttpResponse(content, content_type='application/octet-stream')
@@ -193,7 +208,7 @@ def save_file(request):
 		path = request.POST.get("path", "")
 		content = request.POST.get("content", "")
 
-		with open(path, 'w') as f:
+		with open(path, 'w', encoding='utf-8', newline='') as f:
 			f.write(content)
 
 		return HttpResponse("File saved")
@@ -206,16 +221,19 @@ def run_project(request, project_id):
 	Run given project manage.py runserver 8001
 	"""
 	project_home = join(settings.PROJECTS_HOME, project_id)
-	# TODO: makemigrations && migrate
+
 	if request.method == "POST":
 		pid = run_manage(project_id, project_home)
 		return HttpResponse(pid)
 
-	pid = request.GET.get("pid", "")
-	if pid:
-		fh = open(join(settings.TOP_DIR, 'project_run.log'), 'r')
-		data = fh.read()
-		return HttpResponse(data)
+	if request.GET.get("pid", ""):
+		try:
+			with open(settings.RUN_LOG_FILE, 'r', encoding='utf-8', errors='replace') as f:
+				return HttpResponse(f.read())
+		except FileNotFoundError:
+			pass
+
+	return HttpResponse("")
 
 
 def stop_project(request, project_id):
@@ -227,9 +245,18 @@ def stop_project(request, project_id):
 		pid = request.POST.get("pid", "")
 		if pid:
 			try:
-				os.kill(int(pid), 9)
+				pid = int(pid)
+				# 0 and 1 would hit the IDE's own group or every user process
+				if pid <= 1:
+					return HttpResponse("")
+				try:
+					# pid leads the project's process group, see run.serve
+					os.killpg(pid, signal.SIGKILL)
+				except ProcessLookupError:
+					# worker not yet past setsid, its group doesn't exist yet
+					os.kill(pid, signal.SIGKILL)
 				return HttpResponse("OK")
-			except OSError, e:
+			except (OSError, ValueError) as e:
 				return HttpResponse(str(e))
 
 	return HttpResponse("")
